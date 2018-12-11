@@ -2,7 +2,6 @@ package com.example.petong.classattendance;
 
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,7 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
+import com.lemmingapex.trilateration.TrilaterationFunction;
+
+import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
+import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import java.util.ArrayList;
@@ -34,16 +41,22 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter adapter;
     private static final int REQUEST_FINE_LOCATION = 124;
-    private final String bssid1 = "68:7f:74:6f:cd:2c";
-    private final String bssid2 = "20:aa:4b:c5:9b:9b";
-    private final String bssid3 = "a0:72:2c:0e:db:74";
+    //private final String bssid1 = "68:7f:74:6f:cd:2c";
+    //private final String bssid2 = "20:aa:4b:c5:9b:9b";
+    //private final String bssid3 = "a0:72:2c:0e:db:74";
     private int rssiOneMeter1 = -46;
     private int rssiOneMeter2 = -45;
     private int rssiOneMeter3 = -36;
     private final double[][] positions = new double[][] { { 3.6, 0.0 }, { 0.0, 0.0 }, { 0.3, 3.4 } };
-    private double[3] distance;
-    private 
+    private double[] distance = new double[3];
     private TextView showDistance;
+    private Button buttonShow;
+    private TextView showRssi1;
+    private TextView showRssi2;
+    private TextView showRssi3;
+
+    ScanBoradcastReceiver wifiReceiver = new ScanBoradcastReceiver();
+    ScanWifiTask wifiTask = new ScanWifiTask();
 
 
     @Override
@@ -54,29 +67,65 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
         }
+        //registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
 
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiReceiver.setWifiManager(wifiManager);
+        wifiTask.setWifiManager(wifiManager);
+
+        IntentFilter filter = new IntentFilter((WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        registerReceiver(wifiReceiver, filter);
+        //scanWifi();
+        wifiTask.execute();
+
+        showRssi1 = (TextView) findViewById(R.id.rssiText1);
+        showRssi2 = (TextView) findViewById(R.id.rssiText2);
+        showRssi3 = (TextView) findViewById(R.id.rssiText3);
+        wifiTask.setTextview(showRssi1);
 
         showDistance = (TextView)  findViewById(R.id.ap);
         buttonScan = findViewById(R.id.scanBtn);
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //scanWifi();
+                //calPosition(positions, distance);
+                showDistance.append("rssi1: " + wifiReceiver.rssi[0] + "\n");
+                showDistance.append("rssi2: " + wifiReceiver.rssi[1] + "\n");
+                showDistance.append("rssi3: " + wifiReceiver.rssi[2] + "\n");
+                //showRssi1.setText(wifiTask.rssi1);
+                //showRssi2.setText(wifiTask.rssi2);
+                //showRssi3.setText(wifiTask.rssi3);
 
-                scanWifi();
             }
         });
 
-        listView = findViewById(R.id.wifiList);
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        //listView = findViewById(R.id.wifiList);
+
+
         /*
         if (!wifiManager.isWifiEnabled()) {
             Toast.makeText(this, "WiFi is disabled ... We need to enable it", Toast.LENGTH_LONG).show();
             wifiManager.setWifiEnabled(true);
         }
-        */
+
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
         listView.setAdapter(adapter);
         scanWifi();
+
+
+        /*
+        buttonShow = findViewById(R.id.showButt);
+        buttonShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i <= 2; i++) {
+                    Toast.makeText(getBaseContext(), String.valueOf(distance[i]), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        */
+
     }
 
 
@@ -114,35 +163,35 @@ public class MainActivity extends AppCompatActivity {
 
     private void scanWifi() {
         arrayList.clear();
-        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         wifiManager.startScan();
         //Toast.makeText(this, "Scanning WiFi ...", Toast.LENGTH_SHORT).show();
     }
 
+    /*
     BroadcastReceiver wifiReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             results = wifiManager.getScanResults();
-            unregisterReceiver(this);
+            //unregisterReceiver(this);
 
             for (ScanResult scanResult : results) {
                 switch (scanResult.BSSID) {
                     case bssid1: {
                         //Toast.makeText(getBaseContext(), "Access Point 1", Toast.LENGTH_LONG).show();
-                        distance = calDistance(scanResult.level, rssiOneMeter1);
-                        showDistance.append("Distance ap1: " + distance + " " + scanResult.level +"\n");
+                        distance[0] = calDistance(scanResult.level, rssiOneMeter1);
+                        //showDistance.append("Distance ap1: " + distance[0] + " " + scanResult.level +"\n");
                         break;
                     }
                     case bssid2: {
                         //Toast.makeText(getBaseContext(), "Access Point 2", Toast.LENGTH_LONG).show();
-                        distance = calDistance(scanResult.level, rssiOneMeter2);
-                        showDistance.append("Distance ap2: " + distance + " " + scanResult.level +"\n");
+                        distance[1] = calDistance(scanResult.level, rssiOneMeter2);
+                        //showDistance.append("Distance ap2: " + distance[1] + " " + scanResult.level +"\n");
                         break;
                     }
                     case bssid3: {
                         //Toast.makeText(getBaseContext(), "Access Point 3", Toast.LENGTH_LONG).show();
-                        distance = calDistance(scanResult.level, rssiOneMeter3);
-                        showDistance.append("Distance ap3: " + distance + " " + scanResult.level +"\n");
+                        distance[2] = calDistance(scanResult.level, rssiOneMeter3);
+                       // showDistance.append("Distance ap3: " + distance[2] + " " + scanResult.level +"\n");
                         break;
                     }
                 }
@@ -151,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+    */
 
     private double calDistance(int rssi, int rssiOneMeter) {
         double distance;
@@ -161,19 +211,32 @@ public class MainActivity extends AppCompatActivity {
         return distance;
     }
 
+    private double[] calPosition(double[][] positions, double[] distances){
+        NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
+        LeastSquaresOptimizer.Optimum optimum = solver.solve();
+
+// the answer
+        double[] centroid = optimum.getPoint().toArray(); //ตำแหน่งได้จากนี้แล้ว
+
+// error and geometry information; may throw SingularMatrixException depending the threshold argument provided
+        //RealVector standardDeviation = optimum.getSigma(0); //ไม่ใช้
+        //RealMatrix covarianceMatrix = optimum.getCovariances(0); //ไม่ใช้
+
+        showDistance.append(String.format("%.2f", centroid[0]) + ", " + String.format("%.2f", centroid[1]) + "\n");
+
+
+        return centroid;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(wifiReceiver);
+    }
+
 }
 
-//final NetInfo netInfo = new NetInfo(this);
-        /*
-        mSSIDTextView = findViewById(R.id.ssid);
-        mIPadrTextView = findViewById(R.id.ipAdr);
-        mMACadrTextView = findViewById(R.id.macAdr);
-        mRSSITextView = findViewById(R.id.rssi);
-        Button buttonget = findViewById(R.id.button);
-
-     ]*/
-
-        /*
+/*
         buttonget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,37 +259,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-    }*/
-    /*
-    private void scanWifi() {
-        mWifiMan = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        BroadcastReceiver wifiScanReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
-                if (success) {
-                    scanSuccess();
-                } else {
-                    scanFailure();
-                }
-
-            }
-        };
-
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-        registerReceiver(wifiScanReceiver, intentFilter);
-    }
-
-    private void scanSuccess() {
-        List<ScanResult> results = mWifiMan.getScanResults();
-    }
-    private void scanFailure() {
-        List<ScanResult> results = mWifiMan.getScanResults();
-    }
-
-
-
-
 }*/
+
