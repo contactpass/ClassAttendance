@@ -23,20 +23,29 @@ class ScanBoradcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        results = wifiManager.getScanResults();
+        boolean success = intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, false);
+        if (success) {
+            results = wifiManager.getScanResults();
+        } else {
+            scanFailure();
+            results = wifiManager.getScanResults(); //old results
+        }
+
         for (ScanResult scanResult : results) {
             switch (scanResult.BSSID) {
                 case bssid1: {
                     rssi[0] = scanResult.level;
-                    //tmp = scanResult.level;  test
+                    tmp = scanResult.level;  //test
                     break;
                 }
                 case bssid2: {
                     rssi[1] = scanResult.level;
+                    tmp = scanResult.level;
                     break;
                 }
                 case bssid3: {
                     rssi[2] = scanResult.level;
+                    tmp = scanResult.level;
                     break;
                 }
             }
@@ -44,6 +53,11 @@ class ScanBoradcastReceiver extends BroadcastReceiver {
             //adapter.notifyDataSetChanged();
         }
     }
+
+    public void scanFailure() {
+        //Can I do some thing.
+    }
+
 
     public void setWifiManager(WifiManager wifiManager) {
         this.wifiManager = wifiManager;

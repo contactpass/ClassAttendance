@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "391533847882",
+    "firebase_url": "https://classattendance-9e092.firebaseio.com",
+    "project_id": "classattendance-9e092",
+    "storage_bucket": "classattendance-9e092.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:391533847882:android:31f23d7a177d7e41",
+        "android_client_info": {
+          "package_name": "com.example.petong.classattendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "391533847882-qcoptjsdivrp1e3jpfnp78f4848sq32q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.petong.classattendance",
+            "certificate_hash": "5be11c2a644ce3a5948e00ce49ac10253fdc17a9"
+          }
+        },
+        {
+          "client_id": "391533847882-4ltl7qpj5js8ul382p1v39fs5v8u7icp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWmJuUbG5gDcyaFIkQpOyAWyD3sDPOY20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "391533847882-4ltl7qpj5js8ul382p1v39fs5v8u7icp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
