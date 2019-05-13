@@ -12,7 +12,7 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
     private WifiManager wifiManager;
     private ScanBoradcastReceiver wifiReceiver;
     private int i = 0;
-    private int[] rssi = new int[3];
+    public int[] rssi = new int[3];
     private int[] issr = new int[3];
     private int[] avg_rssi = new int[3];
     private double total;
