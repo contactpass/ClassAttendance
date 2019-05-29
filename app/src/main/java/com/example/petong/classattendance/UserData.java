@@ -1,8 +1,11 @@
 package com.example.petong.classattendance;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class UserData {
+public class UserData implements Parcelable {
     @SerializedName("success")
     private boolean success;
     @SerializedName("AccountID")
@@ -51,6 +54,78 @@ public class UserData {
     private String AccessActivityID174;
     @SerializedName("CountStdMessage")
     private String CountStdMessage;
+
+    protected UserData(Parcel in) {
+        success = in.readByte() != 0;
+        AccountID = in.readString();
+        StudentCode = in.readString();
+        userID = in.readString();
+        FullName = in.readString();
+        PreName = in.readString();
+        FirstName = in.readString();
+        lastName = in.readString();
+        PicPath = in.readString();
+        AccountType = in.readString();
+        ImageLink = in.readString();
+        isTeacher = in.readByte() != 0;
+        isExecutive = in.readByte() != 0;
+        OrganID = in.readString();
+        OrganizationNameHead = in.readString();
+        organizationFullName = in.readString();
+        PositionNameExecutive = in.readString();
+        OrganizationExecNameHead = in.readString();
+        PositionNameTh = in.readString();
+        AccessActivityID73 = in.readString();
+        privateAccessActivityID74 = in.readString();
+        AccessActivityID173 = in.readString();
+        AccessActivityID174 = in.readString();
+        CountStdMessage = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte((byte) (success ? 1 : 0));
+        dest.writeString(AccountID);
+        dest.writeString(StudentCode);
+        dest.writeString(userID);
+        dest.writeString(FullName);
+        dest.writeString(PreName);
+        dest.writeString(FirstName);
+        dest.writeString(lastName);
+        dest.writeString(PicPath);
+        dest.writeString(AccountType);
+        dest.writeString(ImageLink);
+        dest.writeByte((byte) (isTeacher ? 1 : 0));
+        dest.writeByte((byte) (isExecutive ? 1 : 0));
+        dest.writeString(OrganID);
+        dest.writeString(OrganizationNameHead);
+        dest.writeString(organizationFullName);
+        dest.writeString(PositionNameExecutive);
+        dest.writeString(OrganizationExecNameHead);
+        dest.writeString(PositionNameTh);
+        dest.writeString(AccessActivityID73);
+        dest.writeString(privateAccessActivityID74);
+        dest.writeString(AccessActivityID173);
+        dest.writeString(AccessActivityID174);
+        dest.writeString(CountStdMessage);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<UserData> CREATOR = new Creator<UserData>() {
+        @Override
+        public UserData createFromParcel(Parcel in) {
+            return new UserData(in);
+        }
+
+        @Override
+        public UserData[] newArray(int size) {
+            return new UserData[size];
+        }
+    };
 
     public boolean isSuccess() {
         return success;

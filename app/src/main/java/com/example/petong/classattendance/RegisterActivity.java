@@ -29,6 +29,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        User userData = getIntent().getExtras().getParcelable("User");
+        Log.d("CallApi","Receive intent: "+userData.getData().getStudentCode());
+
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
 

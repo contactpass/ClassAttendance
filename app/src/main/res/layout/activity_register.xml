@@ -99,7 +99,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textStudentID" />
 
     <TextView
-        android:id="@+id/textFirstname"
+        android:id="@+id/textFullname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -127,8 +127,8 @@
         android:importantForAutofill="no"
 
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textFirstname"
-        app:layout_constraintTop_toBottomOf="@+id/textFirstname" />
+        app:layout_constraintStart_toStartOf="@+id/textFullname"
+        app:layout_constraintTop_toBottomOf="@+id/textFullname" />
 
     <EditText
         android:id="@+id/fieldLastname"

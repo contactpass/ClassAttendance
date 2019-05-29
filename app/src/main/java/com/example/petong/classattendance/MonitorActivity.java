@@ -78,7 +78,7 @@ public class MonitorActivity extends AppCompatActivity {
         //registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));   Delete
 
 
-        /*      //Firebase RDB
+        /*                                                                                                      //Firebase RDB
         myRef = FirebaseDatabase.getInstance().getReference();  //Firebase Ref
 
         stuRef = myRef.child("Student");
