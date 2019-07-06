@@ -47,10 +47,8 @@ public class MonitorActivity extends AppCompatActivity {
     private ArrayList<String> arrayList = new ArrayList<>();
     private ArrayAdapter adapter;
     private static final int REQUEST_FINE_LOCATION = 124;
-    private int[] rssiOneMeter = new int[] {-46, -45, -36};
-    //private int rssiOneMeter2 = -45;
-    //private int rssiOneMeter3 = -36;
-    private final double[][] positions = new double[][] { { 3.6, 0.0 }, { 0.0, 0.0 }, { 0.3, 3.4 } };
+    private int[] rssiOneMeter = new int[] {-46, -45, -35};
+    private final double[][] positions = new double[][] { { 0.0, 0.0 }, { 0.86, 5.7 }, { 9.8, 5.1 } };
     private double[] distance = new double[3];
     private TextView showDistance;
     private Button buttonShow;
@@ -65,7 +63,7 @@ public class MonitorActivity extends AppCompatActivity {
     //public DatabaseReference stuRef;
 
     ScanBoradcastReceiver wifiReceiver = new ScanBoradcastReceiver();
-    ScanWifiTask wifiTask = new ScanWifiTask();
+    //ScanWifiTask wifiTask = new ScanWifiTask(callback);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,19 +115,19 @@ public class MonitorActivity extends AppCompatActivity {
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiReceiver.setWifiManager(wifiManager);
-        wifiTask.setWifiReceiver(wifiReceiver); //add this
-        wifiTask.setWifiManager(wifiManager);
+        //wifiTask.setWifiReceiver(wifiReceiver); //add this
+        //wifiTask.setWifiManager(wifiManager);
 
         IntentFilter filter = new IntentFilter((WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         registerReceiver(wifiReceiver, filter);
         //scanWifi();
-        wifiTask.execute();
+        //wifiTask.execute();
 
         showRssi1 = findViewById(R.id.rssiText1);
         showRssi2 = findViewById(R.id.rssiText2);
         showRssi3 = findViewById(R.id.rssiText3);
 
-        wifiTask.setTextview(showRssi1, showRssi2, showRssi3);
+        //wifiTask.setTextview(showRssi1, showRssi2, showRssi3);        //Open to use
         showDistance = findViewById(R.id.ap);
 
         buttonScan = findViewById(R.id.scanBtn);
@@ -137,7 +135,7 @@ public class MonitorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {        //on click
                 for (int i = 0; i < 3; i++) {
-                    rssi[i] = wifiTask.rssi[i];
+                    //rssi[i] = wifiTask.rssi[i];
                     distance[i] = calDistance(rssi[i], rssiOneMeter[i]);
                     showDistance.append("AP"+ (i+1) +": " + distance[i] + "\n");
                 }
@@ -153,8 +151,8 @@ public class MonitorActivity extends AppCompatActivity {
         });
 
 
-        final Student student = new Student("Narklove", "Tripi", "0871234567");
-
+        //final Student student = new Student("Narklove", "Tripi", "0871234567");
+        /*
         buttonShow = findViewById(R.id.showButt);
         buttonShow.setOnClickListener(new View.OnClickListener() {          //Add data
             @Override
@@ -175,7 +173,7 @@ public class MonitorActivity extends AppCompatActivity {
                         });
 
             }
-        });
+        });*/
 
         register = findViewById(R.id.textRegister);  // set Register text
         register.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +219,7 @@ public class MonitorActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions,@NonNull int[] grantResults) {
         switch (requestCode) {
             case REQUEST_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -232,7 +230,6 @@ public class MonitorActivity extends AppCompatActivity {
                     // The user disallowed the requested permission.
                     mayRequestLocation();
                 }
-                return;
             }
         }
     }
@@ -274,7 +271,7 @@ public class MonitorActivity extends AppCompatActivity {
         //RealVector standardDeviation = optimum.getSigma(0); //ไม่ใช้
         //RealMatrix covarianceMatrix = optimum.getCovariances(0); //ไม่ใช้
 
-        showDistance.append(String.format("%.2f", centroid[0]) + ", " + String.format("%.2f", centroid[1]) + "\n");
+        //showDistance.append(String.format("%.2f", centroid[0]) + ", " + String.format("%.2f", centroid[1]) + "\n");
 
 
         return centroid;

@@ -13,111 +13,92 @@
     android:layout_centerVertical="false"
     tools:context=".RegisterActivity">
 
+
     <Button
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="100dp"
         android:layout_marginBottom="36dp"
         android:text="@string/confirm"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancelButton" />
 
     <EditText
         android:id="@+id/fieldEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:ems="10"
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textEmail"
         app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
     <TextView
         android:id="@+id/textEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:labelFor="@id/fieldEmail"
         android:text="@string/e_mail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldPhone" />
+        app:layout_constraintStart_toStartOf="@+id/fieldFirstname"
+        app:layout_constraintTop_toBottomOf="@+id/fieldFirstname" />
 
     <TextView
         android:id="@+id/textPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:labelFor="@id/fieldPassword"
         android:text="@string/password"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/fieldEmail"
         app:layout_constraintTop_toBottomOf="@+id/fieldEmail" />
 
     <EditText
         android:id="@+id/fieldPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:ems="10"
         android:importantForAutofill="no"
         android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textPassword"
         app:layout_constraintTop_toBottomOf="@+id/textPassword" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="96dp"
+        android:layout_marginStart="100dp"
         android:layout_marginBottom="36dp"
-        android:text="@string/login"
+        android:text="@android:string/cancel"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textStudentID"
+        android:id="@+id/textFirstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:labelFor="@id/fieldStudentID"
-        android:text="@string/student_id"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/fieldStudentID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textStudentID"
-        app:layout_constraintTop_toBottomOf="@+id/textStudentID" />
-
-    <TextView
-        android:id="@+id/textFullname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:labelFor="@id/fieldFirstname"
         android:text="@string/firstname"
-        app:layout_constraintStart_toStartOf="@+id/fieldStudentID"
-        app:layout_constraintTop_toBottomOf="@+id/fieldStudentID" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textLastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="32dp"
         android:labelFor="@id/fieldLastname"
         android:text="@string/lastname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/fieldFirstname"
-        app:layout_constraintTop_toBottomOf="@+id/fieldStudentID" />
+        app:layout_constraintTop_toTopOf="@+id/textFirstname" />
 
     <EditText
         android:id="@+id/fieldFirstname"
@@ -127,52 +108,17 @@
         android:importantForAutofill="no"
 
         android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="@+id/textFullname"
-        app:layout_constraintTop_toBottomOf="@+id/textFullname" />
+        app:layout_constraintStart_toStartOf="@+id/textFirstname"
+        app:layout_constraintTop_toBottomOf="@+id/textFirstname" />
 
     <EditText
         android:id="@+id/fieldLastname"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:ems="10"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textLastname"
         app:layout_constraintTop_toBottomOf="@+id/textLastname" />
-
-    <EditText
-        android:id="@+id/fieldPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:ems="10"
-        android:importantForAutofill="no"
-        android:inputType="phone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPhone" />
-
-    <TextView
-        android:id="@+id/textPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:labelFor="@id/fieldPhone"
-        android:text="@string/phone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldFirstname" />
-
-    <TextView
-        android:id="@+id/textEndEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:gravity="center_vertical"
-        android:text="@string/cmu_ac_th"
-        app:layout_constraintStart_toEndOf="@+id/fieldEmail"
-        app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
 </android.support.constraint.ConstraintLayout>

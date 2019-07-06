@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText password;
     private Button login;
     private ProgressBar loadingProgressBar;
-
+    private TextView lecturer;
     private User userData;
 
     @Override
@@ -68,7 +69,19 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.fieldPassword);
         login = findViewById(R.id.buttonLogin);
         loadingProgressBar = findViewById(R.id.loading);
+        lecturer = findViewById(R.id.textLecturer);
+        lecturer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoLoginLecturer();
+            }
+        });
 
+    }
+
+    public void gotoLoginLecturer() {
+        Intent intent = new Intent(this, LoginLecturerActivity.class);
+        startActivity(intent);
     }
 
     private void callAPI(HashMap<String, JSONObject> jsonParams){

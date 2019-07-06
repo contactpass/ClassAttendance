@@ -1,5 +1,6 @@
 package com.example.petong.classattendance;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,14 +29,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        User userData = getIntent().getExtras().getParcelable("User");
-        Log.d("CallApi","Receive intent: "+userData.getData().getStudentCode());
 
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
 
         findViewById(R.id.registerButton).setOnClickListener(this);
-        findViewById(R.id.loginButton).setOnClickListener(this);
+        findViewById(R.id.cancelButton).setOnClickListener(this);
         //findViewById(R.id.logoutButton).setOnClickListener(this);         //Log out
 
         // Initialize Firebase Auth
@@ -76,6 +74,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            gotoLogin();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -92,41 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         // [END create_user_with_email]
     }
 
-    private void signIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
-        if (!validateForm()) {
-            return;
-        }
 
-        //showProgressDialog();
-
-        // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "Authentication failed.",Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-                            //mStatusTextView.setText(R.string.auth_failed);
-                        }
-                        //hideProgressDialog();
-                        // [END_EXCLUDE]
-                    }
-                });
-        // [END sign_in_with_email]
-    }
 
     private void signOut() {
         mAuth.signOut();
@@ -199,13 +165,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (i == R.id.registerButton) {
             createAccount(mEmailField.getText().toString() + "@cmu.ac.th", mPasswordField.getText().toString());
         }
-        else if (i == R.id.loginButton) {
-            signIn(mEmailField.getText().toString() + "@cmu.ac.th", mPasswordField.getText().toString());
+        else if (i == R.id.cancelButton) {
+            //signIn(mEmailField.getText().toString() + "@cmu.ac.th", mPasswordField.getText().toString());
         }/* else if (i == R.id.logoutButton) {
             signOut();
         } else if (i == R.id.verifyEmailButton) {
             sendEmailVerification();
         }*/
+    }
+    private void gotoLogin() {
+        Intent intent = new Intent(this, LoginLecturerActivity.class);
+        startActivity(intent);
     }
 
 }

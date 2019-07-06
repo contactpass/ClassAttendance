@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="@+id/textStuCode" />
 
     <TextView
-        android:id="@+id/textFullname"
+        android:id="@+id/textFirstname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -33,9 +33,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textFullname"
-        app:layout_constraintStart_toEndOf="@+id/textFullname"
-        app:layout_constraintTop_toTopOf="@+id/textFullname" />
+        app:layout_constraintBottom_toBottomOf="@+id/textFirstname"
+        app:layout_constraintStart_toEndOf="@+id/textFirstname"
+        app:layout_constraintTop_toTopOf="@+id/textFirstname" />
 
     <TextView
         android:id="@+id/fieldFullName"
