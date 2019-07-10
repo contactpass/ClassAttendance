@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     //private final double[][] positionsAP = new double[][] { { 0.0, 0.0 }, { 0.86, 5.7 }, { 9.8, 5.1 } };  //home
     private final double[][] positionsAP = new double[][] { { 5.5, 0.0 }, { 0.0, 0.0}, { 2, 4.5 } };
     private double[] distance = new double[3];
-    //private int[] rssi = new int[3];
     //private  final int[][] room1 =  {{-1, 5}, {-2, 4}}; //{{x1, x2}, {y1, y2}}
     private  final int[][] room1 =  {{-4, 8}, {-4, 12}};
     private ScanBoradcastReceiver wifiReceiver;
@@ -70,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView stuID;
     private TextView stuName;
+
+    private TableLayout courseOpen;
+    private TextView titleTV;
+    private TextView sectionTV;
+    private TextView dayTV;
+    private TextView timeTV;
+    private TextView statusTV;
+    private String inArea = "in the area";
 
 
     @Override
@@ -119,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onReceiveRssi(int[] rssi) {
                             Log.d("Dayd", rssi[0] + " " + rssi[1] + " " + rssi[2]);
-                            //Toast.makeText(getApplicationContext(), "Rssi " + rssi[0] + ", " + rssi[1] + ", " + rssi[2], Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Rssi " + rssi[0] + ", " + rssi[1] + ", " + rssi[2], Toast.LENGTH_LONG).show();
                             for (int i = 0; i < 3; i++) {
                                 distance[i] = calDistance(rssi[i], rssiOneMeter[i]);
                             }
@@ -129,13 +137,14 @@ public class MainActivity extends AppCompatActivity {
                             //Log.d("Dayd",String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]));
                             if (position[0] >= room1[0][0] && position[0] <= room1[0][1] ) {
                                 if (position[1] >= room1[1][0] && position[1] <= room1[1][1]) {
+                                    statusTV.setText(inArea);
                                     Toast.makeText(getApplicationContext(),"You are in the area " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                                     count++;
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(),"Position " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                             }
-                            if (count == 5){
+                            if (false/*count == 5*/){
                                 attendanceClass(userData.getData());
                                 wifiTask.cancel(true);
                             }
@@ -149,10 +158,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void intInstance(){
-        stuID.findViewById(R.id.stuIDView);
-        stuName.findViewById(R.id.fullnameView);
+        stuID = findViewById(R.id.stuIDView);
+        stuName = findViewById(R.id.fullnameView);
+        titleTV = findViewById(R.id.titleText);
+        sectionTV = findViewById(R.id.sectionView);
+        dayTV = findViewById(R.id.dayView);
+        timeTV = findViewById(R.id.timeView);
+        statusTV = findViewById(R.id.statusView);
+
         db = FirebaseFirestore.getInstance();
         wifiReceiver = new ScanBoradcastReceiver();
+    }
+
+    private void createTable(HashMap<String, Object> courseList){
+        Course course = (Course) courseList.get(courseNow);
+        String title = courseNow + " - " + course.getTitle();
+        titleTV.setText(title);
+        if (course.getSection_lab().equals("000")) {
+            sectionTV.setText(course.getSection_lec());
+        } else {
+            sectionTV.setText(course.getSection_lab());
+        }
+        dayTV.setText(course.getDay());
+        timeTV.setText(course.getTime());
+        String start = "Class Started";
+        statusTV.setText(start);
+
+        Toast.makeText(getApplicationContext(), "Class Attendance Success", Toast.LENGTH_LONG).show();
     }
 
     interface SearchCourseInterface {
@@ -210,7 +242,9 @@ public class MainActivity extends AppCompatActivity {
                         Log.w("Attendance", "Error adding document", e);
                     }
                 });
-        Toast.makeText(getApplicationContext(), "Check In Success", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Class Attendance Success", Toast.LENGTH_LONG).show();
+        String checkIn = "Success";
+        statusTV.setText(checkIn);
     }
 
 
@@ -256,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
                 if (startTime.isBefore(timeNow) && endTime.isAfter(timeNow)){
                     Log.d("Dayd", mCourse.getTitle() + " " + mCourse.getDay() + " " + mCourse.getTime());
                     setCourseNow(key);
+                    createTable(courseList);
                     return true;
                 }
                 //Log.d("Dayd", mCourse.getTitle() + " " + mCourse.getDay());

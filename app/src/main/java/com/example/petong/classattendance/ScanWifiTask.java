@@ -30,7 +30,7 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
     protected int[] doInBackground(Void... voids) {
         int i;
         int count = 0;
-        /*
+
         while (true) {
 
             success = wifiManager.startScan();
@@ -47,9 +47,9 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
             }
             if (rssi[0] != 0 && rssi[1] != 0 && rssi[2] != 0) {
                 if (count == 0) {
-                    avg_rssi[0] = rssi[0];
-                    avg_rssi[1] = rssi[1];
-                    avg_rssi[2] = rssi[2];
+                    for (i = 0; i < 3; i++) {
+                        avg_rssi[i] = rssi[i];
+                    }
                     count++;
                     if (first) {
                         publishProgress(avg_rssi);
@@ -73,21 +73,18 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
 
                 }
             }
-        }*/
-
+        }
+/*
         while (true) {
             success = wifiManager.startScan();
             if (!success) {
                 wifiReceiver.scanFailure();
             }
-            if (first){
-                try {
+            try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                first = false;
-            }
             //wifiManager.startScan();
 
             for (int k = 0; k < 3; k++) {
@@ -96,9 +93,9 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
                  //AVG rssi
             if (rssi[0] != 0 && rssi[1] != 0 && rssi[2] != 0) {
                 if (first) {
-                    avg_rssi[0] = rssi[0];
-                    avg_rssi[1] = rssi[1];
-                    avg_rssi[2] = rssi[2];
+                    for (i = 0; i < 3; i++) {
+                        avg_rssi[i] = rssi[i];
+                    }
                     first = false;
                     publishProgress(avg_rssi);
                 } else {
@@ -119,7 +116,7 @@ public class ScanWifiTask extends AsyncTask<Void, int[], int[]> {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
     }
 
     @Override

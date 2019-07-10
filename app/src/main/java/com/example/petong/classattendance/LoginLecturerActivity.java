@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -62,6 +64,9 @@ public class LoginLecturerActivity extends AppCompatActivity {
         });
         //loadingProgressBar = findViewById(R.id.loading);
         register = findViewById(R.id.textRegister);
+        SpannableString content = new SpannableString(("Register"));
+        content.setSpan(new UnderlineSpan(),0, content.length(), 0);
+        register.setText(content);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +92,10 @@ public class LoginLecturerActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String userID = user.getUid();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.putExtra("User", userID);
+                            startActivity(intent);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

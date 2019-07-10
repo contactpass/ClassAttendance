@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
     tools:context=".MainActivity">
-
 
     <TextView
         android:id="@+id/stuIDText"
@@ -13,7 +16,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/preinfotext"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         android:text="@string/student_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,6 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="32dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintBottom_toBottomOf="@+id/stuIDText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/stuIDText"
@@ -32,9 +41,10 @@
         android:id="@+id/fullnameText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/name"
+        android:background="@drawable/preinfotext"
         android:gravity="end"
+        android:text="@string/name"
+        android:textColor="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintEnd_toEndOf="@+id/stuIDText"
         app:layout_constraintStart_toStartOf="@+id/stuIDText"
         app:layout_constraintTop_toBottomOf="@+id/stuIDText" />
@@ -44,8 +54,151 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
         app:layout_constraintBottom_toBottomOf="@+id/fullnameText"
         app:layout_constraintEnd_toEndOf="@+id/stuIDView"
         app:layout_constraintStart_toEndOf="@+id/fullnameText"
         app:layout_constraintTop_toTopOf="@+id/fullnameText" />
+
+   <TextView
+       android:id="@+id/titleText"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:layout_marginStart="8dp"
+       android:layout_marginTop="28dp"
+       android:layout_marginEnd="8dp"
+       android:background="@color/colorPrimary"
+       android:textColor="@color/common_google_signin_btn_text_dark"
+       android:paddingStart="10sp"
+       android:paddingEnd="10sp"
+       android:paddingTop="10sp"
+       android:paddingBottom="10sp"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/fullnameText" />
+
+   <TextView
+       android:id="@+id/sectionText"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@drawable/text_table"
+       android:gravity="center"
+       android:text="@string/section"
+       android:paddingStart="5sp"
+       android:paddingEnd="5sp"
+       android:paddingTop="3sp"
+       android:paddingBottom="3sp"
+       app:layout_constraintStart_toStartOf="@+id/titleText"
+       app:layout_constraintTop_toBottomOf="@+id/titleText" />
+
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_table"
+        android:gravity="center"
+        android:text="@string/day"
+        android:paddingTop="3sp"
+        android:paddingBottom="3sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sectionText"
+        app:layout_constraintEnd_toEndOf="@+id/dayView"
+        app:layout_constraintStart_toStartOf="@+id/dayView"
+        app:layout_constraintTop_toTopOf="@+id/sectionText" />
+
+    <TextView
+        android:id="@+id/timeText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_table"
+        android:gravity="center"
+        android:text="@string/time"
+        android:paddingTop="3sp"
+        android:paddingBottom="3sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dayText"
+        app:layout_constraintEnd_toEndOf="@+id/timeView"
+        app:layout_constraintStart_toStartOf="@+id/timeView"
+        app:layout_constraintTop_toTopOf="@+id/dayText" />
+
+   <TextView
+       android:id="@+id/statusText"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:background="@drawable/text_table"
+       android:gravity="center"
+       android:text="@string/status"
+       android:paddingTop="3sp"
+       android:paddingBottom="3sp"
+       app:layout_constraintBottom_toBottomOf="@+id/timeText"
+       app:layout_constraintEnd_toEndOf="@+id/statusView"
+       app:layout_constraintStart_toStartOf="@+id/statusView"
+       app:layout_constraintTop_toTopOf="@+id/timeText" />
+
+    <TextView
+        android:id="@+id/sectionView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textview_table"
+        android:gravity="center"
+        android:text="@string/section"
+        android:paddingTop="3sp"
+        android:paddingBottom="3sp"
+        app:layout_constraintEnd_toEndOf="@+id/sectionText"
+        app:layout_constraintStart_toStartOf="@+id/sectionText"
+        app:layout_constraintTop_toBottomOf="@+id/sectionText" />
+
+   <TextView
+       android:id="@+id/dayView"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@drawable/textview_table"
+       android:gravity="center"
+       android:text="@string/day"
+       android:paddingStart="5sp"
+       android:paddingEnd="5sp"
+       android:paddingTop="3sp"
+       android:paddingBottom="3sp"
+       app:layout_constraintBottom_toBottomOf="@+id/sectionView"
+       app:layout_constraintStart_toEndOf="@+id/sectionView"
+       app:layout_constraintTop_toTopOf="@+id/sectionView"
+       app:layout_constraintVertical_bias="0.0" />
+
+   <TextView
+       android:id="@+id/timeView"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:background="@drawable/textview_table"
+       android:gravity="center"
+       android:text="@string/time"
+       android:paddingStart="5sp"
+       android:paddingEnd="5sp"
+       android:paddingTop="3sp"
+       android:paddingBottom="3sp"
+       app:layout_constraintBottom_toBottomOf="@+id/dayView"
+       app:layout_constraintStart_toEndOf="@+id/dayView"
+       app:layout_constraintTop_toTopOf="@+id/dayView"
+       app:layout_constraintVertical_bias="0.0" />
+
+   <TextView
+       android:id="@+id/statusView"
+       android:layout_width="0dp"
+       android:layout_height="wrap_content"
+       android:background="@drawable/textview_table"
+       android:gravity="center"
+       android:text="@string/status"
+       android:paddingStart="5sp"
+       android:paddingEnd="5sp"
+       android:paddingTop="3sp"
+       android:paddingBottom="3sp"
+       android:textColor="#3B892E"
+       app:layout_constraintBottom_toBottomOf="@+id/timeView"
+       app:layout_constraintEnd_toEndOf="@+id/titleText"
+       app:layout_constraintHorizontal_bias="1.0"
+       app:layout_constraintStart_toEndOf="@+id/timeView"
+       app:layout_constraintTop_toTopOf="@+id/timeView"
+       app:layout_constraintVertical_bias="0.0" />
+
+
+
+
+
 </android.support.constraint.ConstraintLayout>

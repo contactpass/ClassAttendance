@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,22 +46,26 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userLogin.setUserName(username.getText().toString() + "@cmu.ac.th");
-                userLogin.setPassword(password.getText().toString());
 
-                try{
-                    JSONObject data = new JSONObject();
-                    data.put("UserName",userLogin.getUserName());
-                    data.put("Password",userLogin.getPassword());
-                    HashMap<String, JSONObject> jsonParams = new HashMap<>();
-                    jsonParams.put("params", data);
+                if (validateForm()) {
+                    userLogin.setUserName(username.getText().toString() + "@cmu.ac.th");
+                    userLogin.setPassword(password.getText().toString());
 
-                    callAPI(jsonParams);
+                    try{
+                        JSONObject data = new JSONObject();
+                        data.put("UserName",userLogin.getUserName());
+                        data.put("Password",userLogin.getPassword());
+                        HashMap<String, JSONObject> jsonParams = new HashMap<>();
+                        jsonParams.put("params", data);
+
+                        callAPI(jsonParams);
+                    }
+                    catch (JSONException e){
+                        e.printStackTrace();
+                        Log.e("CallApi", "unexpected JSON exception", e);
+                    }
                 }
-                catch (JSONException e){
-                    e.printStackTrace();
-                    Log.e("CallApi", "unexpected JSON exception", e);
-                }
+
             }
         });
 
@@ -70,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.buttonLogin);
         loadingProgressBar = findViewById(R.id.loading);
         lecturer = findViewById(R.id.textLecturer);
+        SpannableString content = new SpannableString(("forLecturer"));
+        content.setSpan(new UnderlineSpan(),0, content.length(), 0);
+        lecturer.setText(content);
         lecturer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +130,28 @@ public class LoginActivity extends AppCompatActivity {
             Log.d("CallApi", "DAO set success: " + userData.getStatus());
             Log.d("CallApi", "LoginActivity: "+ userData.getData().getStudentCode());
         }
+    }
+
+    private boolean validateForm() {
+        boolean valid = true;
+
+        String email = username.getText().toString();
+        if (TextUtils.isEmpty(email)) {
+            username.setError("Required.");
+            valid = false;
+        } else {
+            username.setError(null);
+        }
+
+        String mpassword = password.getText().toString();
+        if (TextUtils.isEmpty(mpassword)) {
+            password.setError("Required.");
+            valid = false;
+        } else {
+            password.setError(null);
+        }
+
+        return valid;
     }
 }
 

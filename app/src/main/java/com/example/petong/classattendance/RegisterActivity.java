@@ -22,16 +22,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final String TAG = "emailpassword";
     private EditText mEmailField;
     private EditText mPasswordField;
+    private EditText firstName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-
-        mEmailField = findViewById(R.id.fieldEmail);
-        mPasswordField = findViewById(R.id.fieldPassword);
 
         findViewById(R.id.registerButton).setOnClickListener(this);
         findViewById(R.id.cancelButton).setOnClickListener(this);
@@ -55,6 +52,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //updateUI(currentUser);
     }
 
+    private void initInstance() {
+        mEmailField = findViewById(R.id.fieldEmail);
+        mPasswordField = findViewById(R.id.fieldPassword);
+    }
 
 
     private void createAccount(String email, String password) {
@@ -73,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String userID = user.getUid();
                             //updateUI(user);
                             gotoLogin();
 

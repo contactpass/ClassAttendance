@@ -17,17 +17,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
 
-        android:layout_marginTop="32dp"
         android:background="@drawable/edittext_bg"
         android:hint="@string/prompt_email"
         android:imeActionLabel="@string/action_sign_in_short"
         android:imeOptions="actionDone"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textStudent" />
+        app:layout_constraintTop_toTopOf="@+id/textView" />
 
 
     <EditText
@@ -87,14 +87,13 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="28dp"
         android:background="@drawable/textcmu_bg"
         android:text="@string/cmu_ac_th"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fieldUsername"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fieldUsername"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textStudent" />
 
     <TextView
         android:id="@+id/textStudent"
@@ -116,7 +115,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:linksClickable="true"
-        android:text="forLecturer"
+        android:text="@string/forlecturer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

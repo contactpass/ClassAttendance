@@ -43,4 +43,11 @@
     <string name="student_login">Student Login</string>
     <string name="lecturer_login">Lecturer Login</string>
     <string name="name">Name</string>
+    <string name="forlecturer">forLecturer</string>
+    <string name="title">TITLE</string>
+    <string name="section">SECTION</string>
+    <string name="day">DAY</string>
+    <string name="time">TIME</string>
+    <string name="status">STATUS</string>
+    <string name="add_button">ADD</string>
 </resources>
