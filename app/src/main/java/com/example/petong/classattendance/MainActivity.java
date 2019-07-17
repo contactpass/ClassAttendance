@@ -2,6 +2,7 @@ package com.example.petong.classattendance;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
@@ -11,6 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,12 +59,15 @@ public class MainActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private static final int REQUEST_FINE_LOCATION = 124;
     //private int[] rssiOneMeter = new int[] {-46, -45, -35}; //home
-    private int[] rssiOneMeter = new int[] {-46, -45, -40}; //jumbo
+    //private int[] rssiOneMeter = new int[] {-46, -45, -40}; //jumbo1
+    private int[] rssiOneMeter = new int[] {-44, -43, -40}; //jumbo all
     //private final double[][] positionsAP = new double[][] { { 0.0, 0.0 }, { 0.86, 5.7 }, { 9.8, 5.1 } };  //home
-    private final double[][] positionsAP = new double[][] { { 5.5, 0.0 }, { 0.0, 0.0}, { 2, 4.5 } };
+    //private final double[][] positionsAP = new double[][] { { 5.5, 0.0 }, { 0.0, 0.0}, { 2, 4.5 } };        //309
+    private final double[][] positionsAP = new double[][] { { 8.0, 0.0 }, { 8.0, 15.0}, { 0, 14. } };        //floor3
     private double[] distance = new double[3];
-    //private  final int[][] room1 =  {{-1, 5}, {-2, 4}}; //{{x1, x2}, {y1, y2}}
-    private  final int[][] room1 =  {{-4, 8}, {-4, 12}};
+    //private  final int[][] room1 =  {{-1, 5}, {-2, 4}}; //{{x1, x2}, {y1, y2}}    home
+    //private  final int[][] room1 =  {{-4, 8}, {-4, 12}};        //309 test
+    private  final int[][] room1 =  {{-4, 4}, {8, 20}};        //309jumbo
     private ScanBoradcastReceiver wifiReceiver;
     private ScanWifiTask wifiTask;
     private FirebaseFirestore db;
@@ -78,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView timeTV;
     private TextView statusTV;
     private String inArea = "in the area";
+    private EditText courseno;
+    private Button showbutt;
+
 
 
     @Override
@@ -109,6 +119,17 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter((WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         registerReceiver(wifiReceiver, filter);
 
+        /*showbutt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String courseNo = courseno.getText().toString();
+                Intent intent = new Intent(getApplicationContext(), ShowAttActivity.class);
+                intent.putExtra("CourseID", courseNo);
+                intent.putExtra("StudentID", userData.getData().getStudentCode());
+                startActivity(intent);
+            }
+        });*/
+
         searchCourse(userData, new SearchCourseInterface() {
             @Override
             public void onSearchCourseFinished(HashMap<String, Object> courseList) {
@@ -137,16 +158,28 @@ public class MainActivity extends AppCompatActivity {
                             //Log.d("Dayd",String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]));
                             if (position[0] >= room1[0][0] && position[0] <= room1[0][1] ) {
                                 if (position[1] >= room1[1][0] && position[1] <= room1[1][1]) {
+                                    Map<String, Object> status = new HashMap<>();
+                                    status.put("status", true);
+                                    db.collection("Student").document(userData.getData().getStudentCode()).update(status);
                                     statusTV.setText(inArea);
                                     Toast.makeText(getApplicationContext(),"You are in the area " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                                     count++;
+                                } else {
+                                    Map<String, Object> status = new HashMap<>();
+                                    status.put("status", false);
+                                    db.collection("Student").document(userData.getData().getStudentCode()).update(status);
+                                    Toast.makeText(getApplicationContext(),"Position " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                                 }
                             } else {
+                                Map<String, Object> status = new HashMap<>();
+                                status.put("status", false);
+                                db.collection("Student").document(userData.getData().getStudentCode()).update(status);
                                 Toast.makeText(getApplicationContext(),"Position " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                             }
-                            if (false/*count == 5*/){
+                            if (false /*count == 5*/){
                                 attendanceClass(userData.getData());
                                 wifiTask.cancel(true);
+                                Toast.makeText(getApplicationContext(), "Class Attendance Success", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -165,6 +198,8 @@ public class MainActivity extends AppCompatActivity {
         dayTV = findViewById(R.id.dayView);
         timeTV = findViewById(R.id.timeView);
         statusTV = findViewById(R.id.statusView);
+        courseno = findViewById(R.id.coursenoText);
+        showbutt = findViewById(R.id.show_button);
 
         db = FirebaseFirestore.getInstance();
         wifiReceiver = new ScanBoradcastReceiver();
@@ -184,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
         String start = "Class Started";
         statusTV.setText(start);
 
-        Toast.makeText(getApplicationContext(), "Class Attendance Success", Toast.LENGTH_LONG).show();
+
     }
 
     interface SearchCourseInterface {
@@ -260,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 courseID.put(key, course.getSection_lab());
             }
         }
-        Student student = new Student(userData.getPreName(), userData.getFirstName(), userData.getLastName(), courseID);
+        Student student = new Student(userData.getStudentCode(), userData.getPreName(), userData.getFirstName(), userData.getLastName(), courseID, false);
         db.collection("Student").document(userData.getStudentCode()).set(student)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

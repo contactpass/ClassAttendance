@@ -15,14 +15,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private static final String TAG = "emailpassword";
+    private FirebaseFirestore db;
     private EditText mEmailField;
     private EditText mPasswordField;
     private EditText firstName;
+    private EditText lastName;
 
 
     @Override
@@ -30,12 +32,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        findViewById(R.id.registerButton).setOnClickListener(this);
-        findViewById(R.id.cancelButton).setOnClickListener(this);
-        //findViewById(R.id.logoutButton).setOnClickListener(this);         //Log out
+        // Initialize
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
+        initInstance();
 
     }
 
@@ -45,21 +44,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            Log.d(TAG, "user is login");
+            Log.d("emailpassword", "user is login");
         } else {
-            Log.d(TAG, "user is not login");
+            Log.d("emailpassword", "user is not login");
         }
         //updateUI(currentUser);
     }
 
     private void initInstance() {
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         mEmailField = findViewById(R.id.fieldEmail);
         mPasswordField = findViewById(R.id.fieldPassword);
+        firstName = findViewById(R.id.fieldFirstname);
+        lastName = findViewById(R.id.fieldLastname);
+        findViewById(R.id.registerButton).setOnClickListener(this);
+        findViewById(R.id.cancelButton).setOnClickListener(this);
+        //findViewById(R.id.logoutButton).setOnClickListener(this);         //Log out
     }
 
 
     private void createAccount(String email, String password) {
-        Log.d(TAG, "createAccount:" + email);
+        Log.d("emailpassword", "createAccount:" + email);
+
         if (!validateForm()) {
             return;
         }
@@ -72,15 +79,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
+                            Log.d("createAccount", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            String userID = user.getUid();
-                            //updateUI(user);
-                            gotoLogin();
+                            if (user != null) {
+                                String userID = user.getUid();
+                                String firstname = firstName.getText().toString();
+                                String lastname = lastName.getText().toString();
+                                Lecturer lecturer = new Lecturer(firstname, lastname);
+                                Log.d("createAccount", userID);
+                                Log.d("createAccount", lecturer.getFirstname() + " " + lecturer.getLastname());
+                                db.collection("Lecturer").document(userID).set(lecturer);
+                                Log.d("createAccount", "Add DB Success");
+
+                                gotoLogin();
+                            }
+
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Log.w("emailpassword", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                             return;
@@ -96,16 +113,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
 
 
-    private void signOut() {
-        mAuth.signOut();
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null){
-            Log.d(TAG, "user is not logout");
-        } else {
-            Log.d(TAG, "user is logout");
-        }
-        //updateUI(null);
-    }
+
     /*
     private void sendEmailVerification() {
         // Disable button
@@ -127,7 +135,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     "Verification email sent to " + user.getEmail(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.e(TAG, "sendEmailVerification", task.getException());
+                            Log.e("emailpassword", "sendEmailVerification", task.getException());
                             Toast.makeText(EmailPasswordActivity.this,
                                     "Failed to send verification email.",
                                     Toast.LENGTH_SHORT).show();
@@ -157,6 +165,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             mPasswordField.setError(null);
         }
 
+        String firstname = firstName.getText().toString();
+        if (TextUtils.isEmpty(firstname)) {
+            firstName.setError("Required.");
+            valid = false;
+        } else {
+            firstName.setError(null);
+        }
+
+        String lastname = lastName.getText().toString();
+        if (TextUtils.isEmpty(lastname)) {
+            lastName.setError("Required.");
+        } else {
+            lastName.setError(null);
+        }
+
         return valid;
     }
 
@@ -165,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.registerButton) {
-            createAccount(mEmailField.getText().toString() + "@cmu.ac.th", mPasswordField.getText().toString());
+            createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         }
         else if (i == R.id.cancelButton) {
             //signIn(mEmailField.getText().toString() + "@cmu.ac.th", mPasswordField.getText().toString());

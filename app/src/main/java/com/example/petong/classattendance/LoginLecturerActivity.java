@@ -38,16 +38,22 @@ public class LoginLecturerActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+/*
         if (currentUser != null){
             Log.d(TAG, "user is login");
+            String userID = currentUser.getUid();
+            Intent intent = new Intent(getApplicationContext(), LecturerActivity.class);
+            intent.putExtra("Lecturer", userID);
+            startActivity(intent);
         } else {
             Log.d(TAG, "user is not login");
-        }
+        }*/
         //updateUI(currentUser);
     }
 
@@ -92,10 +98,13 @@ public class LoginLecturerActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            String userID = user.getUid();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            intent.putExtra("User", userID);
-                            startActivity(intent);
+                            if (user != null){
+                                String userID = user.getUid();
+                                Intent intent = new Intent(getApplicationContext(), LecturerActivity.class);
+                                intent.putExtra("Lecturer", userID);
+                                startActivity(intent);
+                            }
+
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.

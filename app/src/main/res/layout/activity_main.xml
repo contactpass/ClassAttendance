@@ -197,8 +197,30 @@
        app:layout_constraintTop_toTopOf="@+id/timeView"
        app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/show_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="SHOW"
+        app:layout_constraintEnd_toEndOf="@+id/coursenoText"
+        app:layout_constraintStart_toStartOf="@+id/coursenoText"
+        app:layout_constraintTop_toBottomOf="@+id/coursenoText" />
 
-
+    <EditText
+        android:id="@+id/coursenoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="Course No."
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeView" />
 
 
 </android.support.constraint.ConstraintLayout>

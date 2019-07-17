@@ -15,13 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LecturerActivity"></activity>
-        <activity android:name=".LoginLecturerActivity"/>
+        <activity android:name=".ShowAttActivity"></activity>
+        <activity android:name=".LecturerActivity">
+        </activity>
+        <activity android:name=".LoginLecturerActivity" />
+
         <activity
             android:name=".MainActivity"
             android:label="Student" />
         <activity android:name=".MonitorActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity" >
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
 

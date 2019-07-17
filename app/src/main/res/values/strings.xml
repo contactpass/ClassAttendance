@@ -50,4 +50,8 @@
     <string name="time">TIME</string>
     <string name="status">STATUS</string>
     <string name="add_button">ADD</string>
+    <string name="update">UPDATE</string>
+    <string name="show_online">Show Online</string>
+    <string name="delete">DELETE</string>
+    <string name="check">CHECK</string>
 </resources>

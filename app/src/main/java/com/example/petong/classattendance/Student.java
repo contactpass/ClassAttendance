@@ -4,16 +4,30 @@ import java.util.List;
 import java.util.Map;
 
 public class Student {
+    private String studentID;
     private String prename;
     private String firstname;
     private String lastname;
     private Map<String, String> courseID;
+    private boolean status;
 
-    public Student(String prename, String firstname, String lastname, Map<String, String> courseID) {
+    public Student() {}
+
+    public Student(String studentID, String prename, String firstname, String lastname, Map<String, String> courseID, boolean status) {
+        this.studentID = studentID;
         this.prename = prename;
         this.firstname = firstname;
         this.lastname = lastname;
         this.courseID = courseID;
+        this.status = status;
+    }
+
+    public String getStudentID() {
+        return studentID;
+    }
+
+    public void setStudentID(String studentID) {
+        this.studentID = studentID;
     }
 
     public String getPrename() {
@@ -47,4 +61,8 @@ public class Student {
     public void setCourseID(Map<String, String> courseID) {
         this.courseID = courseID;
     }
+
+    public boolean getStatus() { return status; }
+
+    public void setStatus(boolean status) { this.status = status; }
 }

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10sp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/titleText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingStart="10sp"
+            android:paddingTop="5sp"
+            android:paddingEnd="10sp"
+            android:paddingBottom="5sp"
+            android:textColor="@color/common_google_signin_btn_text_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sectionText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingStart="20sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="20sp"
+            android:paddingBottom="3sp"
+            android:text="@string/section"
+            app:layout_constraintStart_toStartOf="@+id/titleText2"
+            app:layout_constraintTop_toBottomOf="@+id/titleText2" />
+
+        <TextView
+            android:id="@+id/dayText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/day"
+            app:layout_constraintBottom_toTopOf="@+id/dayView2"
+            app:layout_constraintEnd_toEndOf="@+id/dayView2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/dayView2"
+            app:layout_constraintTop_toBottomOf="@+id/titleText2" />
+
+        <TextView
+            android:id="@+id/timeText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/time"
+            app:layout_constraintBottom_toTopOf="@+id/timeView2"
+            app:layout_constraintEnd_toEndOf="@+id/timeView2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/timeView2"
+            app:layout_constraintTop_toBottomOf="@+id/titleText2" />
+
+        <TextView
+            android:id="@+id/sectionView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/section"
+            app:layout_constraintEnd_toEndOf="@+id/sectionText2"
+            app:layout_constraintStart_toStartOf="@+id/sectionText2"
+            app:layout_constraintTop_toBottomOf="@+id/sectionText2" />
+
+        <TextView
+            android:id="@+id/dayView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingStart="10sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="10sp"
+            android:paddingBottom="3sp"
+            android:text="@string/day"
+            app:layout_constraintBottom_toBottomOf="@+id/sectionView2"
+            app:layout_constraintStart_toEndOf="@+id/sectionView2"
+            app:layout_constraintTop_toTopOf="@+id/sectionView2" />
+
+        <TextView
+            android:id="@+id/timeView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingStart="5sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="5sp"
+            android:paddingBottom="3sp"
+            android:text="@string/time"
+            app:layout_constraintBottom_toBottomOf="@+id/dayView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dayView2"
+            app:layout_constraintTop_toTopOf="@+id/dayView2" />
+
+        <Button
+            android:id="@+id/button_Update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/update"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/button_Check"
+            app:layout_constraintStart_toEndOf="@+id/button_Check"
+            app:layout_constraintTop_toTopOf="@+id/button_Check" />
+
+        <Button
+            android:id="@+id/button_Delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/delete"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/button_Update"
+            app:layout_constraintStart_toEndOf="@+id/button_Update"
+            app:layout_constraintTop_toTopOf="@+id/button_Update"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/button_Check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/check"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sectionView2" />
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>
