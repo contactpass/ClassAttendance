@@ -46,9 +46,9 @@ public class ShowStudentAdapter extends FirestoreRecyclerAdapter<Student, ShowSt
 
         public ShowStudentHolder(@NonNull View itemView) {
             super(itemView);
-            studentcode = itemView.findViewById(R.id.text_studentCode);
+            studentcode = itemView.findViewById(R.id.text_studentID);
             studentname = itemView.findViewById(R.id.text_studentname);
-            status = itemView.findViewById(R.id.text_status);
+            status = itemView.findViewById(R.id.text_date);
         }
     }
 }

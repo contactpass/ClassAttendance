@@ -61,7 +61,7 @@
         app:layout_constraintTop_toTopOf="@+id/fullnameText" />
 
    <TextView
-       android:id="@+id/titleText"
+       android:id="@+id/textTitle"
        android:layout_width="0dp"
        android:layout_height="wrap_content"
        android:layout_marginStart="8dp"
@@ -88,8 +88,8 @@
        android:paddingEnd="5sp"
        android:paddingTop="3sp"
        android:paddingBottom="3sp"
-       app:layout_constraintStart_toStartOf="@+id/titleText"
-       app:layout_constraintTop_toBottomOf="@+id/titleText" />
+       app:layout_constraintStart_toStartOf="@+id/textTitle"
+       app:layout_constraintTop_toBottomOf="@+id/textTitle" />
 
     <TextView
         android:id="@+id/dayText"
@@ -191,7 +191,7 @@
        android:paddingBottom="3sp"
        android:textColor="#3B892E"
        app:layout_constraintBottom_toBottomOf="@+id/timeView"
-       app:layout_constraintEnd_toEndOf="@+id/titleText"
+       app:layout_constraintEnd_toEndOf="@+id/textTitle"
        app:layout_constraintHorizontal_bias="1.0"
        app:layout_constraintStart_toEndOf="@+id/timeView"
        app:layout_constraintTop_toTopOf="@+id/timeView"
@@ -203,12 +203,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="SHOW"
-        app:layout_constraintEnd_toEndOf="@+id/coursenoText"
-        app:layout_constraintStart_toStartOf="@+id/coursenoText"
-        app:layout_constraintTop_toBottomOf="@+id/coursenoText" />
+        app:layout_constraintEnd_toEndOf="@+id/textCourseno"
+        app:layout_constraintStart_toStartOf="@+id/textCourseno"
+        app:layout_constraintTop_toBottomOf="@+id/textCourseno" />
 
     <EditText
-        android:id="@+id/coursenoText"
+        android:id="@+id/textCourseno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

@@ -11,10 +11,10 @@ import java.util.List;
 
 
 class ScanBoradcastReceiver extends BroadcastReceiver {
-    //private final String bssid1 = "68:7f:74:6f:cd:2c";      //classroom1
-    private final String bssid1 = "00:7e:95:cb:0a:40";      //jumbo1
-    //private final String bssid2 = "20:aa:4b:c5:9b:9b";      //classroom2
-    private final String bssid2 = "00:7e:95:cb:40:a0";      //jumbo2
+    private final String bssid1 = "68:7f:74:6f:cd:2c";      //classroom1
+    //private final String bssid1 = "00:7e:95:cb:0a:40";      //jumbo1
+    private final String bssid2 = "20:aa:4b:c5:9b:9b";      //classroom2
+    //private final String bssid2 = "00:7e:95:cb:40:a0";      //jumbo2
     //private final String bssid3 = "c4:b8:b4:fb:6a:c8";    //home
     private final String bssid3 = "00:7e:95:cb:3e:80";     //Jumbo3
     private ArrayList<String> arrayList = new ArrayList<>();

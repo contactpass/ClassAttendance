@@ -13,8 +13,6 @@
             android:id="@+id/text_studentID"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:background="#C188E4"
             android:paddingStart="10sp"
             android:paddingTop="2sp"
@@ -22,13 +20,14 @@
             android:paddingBottom="2sp"
             android:text="@string/student_id"
             android:textColor="#3416B2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_date"
+            app:layout_constraintEnd_toStartOf="@+id/text_coursse"
+            app:layout_constraintStart_toEndOf="@+id/text_date"
+            app:layout_constraintTop_toTopOf="@+id/text_date" />
 
         <TextView
-            android:id="@+id/text_studentname"
-            android:layout_width="0dp"
+            android:id="@+id/text_coursse"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#D0D5D1"
             android:paddingStart="10sp"
@@ -36,9 +35,9 @@
             android:paddingEnd="10sp"
             android:paddingBottom="2sp"
             android:text="Student name"
-            app:layout_constraintEnd_toStartOf="@+id/text_date"
-            app:layout_constraintStart_toStartOf="@+id/text_studentID"
-            app:layout_constraintTop_toBottomOf="@+id/text_studentID" />
+            app:layout_constraintBottom_toBottomOf="@+id/text_studentID"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_studentID" />
 
         <TextView
             android:id="@+id/text_date"
@@ -49,10 +48,9 @@
             android:paddingTop="2sp"
             android:paddingEnd="10sp"
             android:paddingBottom="2sp"
-            android:text="@string/status"
-            android:textColor="#3BB75B"
-            app:layout_constraintEnd_toEndOf="@+id/text_studentID"
-            app:layout_constraintTop_toBottomOf="@+id/text_studentID" />
+            android:text="DATE"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

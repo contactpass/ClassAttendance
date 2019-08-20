@@ -8,6 +8,15 @@
 
 
     <EditText
+        android:id="@+id/edit_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="5"
+        android:hint="Section"
+        app:layout_constraintStart_toStartOf="@+id/edit_endtime"
+        app:layout_constraintTop_toBottomOf="@+id/edit_endtime" />
+
+    <EditText
         android:id="@+id/edit_couseno"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,13 +65,13 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_starttime" />
 
     <EditText
-        android:id="@+id/edit_section"
+        android:id="@+id/edit_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="5"
-        android:hint="Section"
-        app:layout_constraintStart_toStartOf="@+id/edit_endtime"
-        app:layout_constraintTop_toBottomOf="@+id/edit_endtime" />
+        android:hint="Room"
+        app:layout_constraintStart_toStartOf="@+id/edit_section"
+        app:layout_constraintTop_toBottomOf="@+id/edit_section" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -1,8 +1,8 @@
 package com.example.petong.classattendance;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,30 +16,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class LecturerActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextView lecName;
     private Button addCoursebutton;
     private Button showonlineButton;
-    private Button updateCourseButton;
     private EditText editTextCourseno;
     private EditText editTextTitle;
     private EditText editTextDay;
     private EditText editTextsTime;
     private EditText editTexteTime;
     private EditText editTextSection;
+    private EditText editTextRoom;
     private String lecturerID;
     private Lecturer lecturer;
     //private CourseLec course;
@@ -49,12 +46,13 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lecturer);
-
+        mContext = this;
         Intent intent = getIntent();
         lecturerID = intent.getStringExtra("Lecturer");       //get intent Lec ID
         setLecID(lecturerID);
@@ -71,8 +69,6 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         lecName = findViewById(R.id.fullnameView);
         addCoursebutton = findViewById(R.id.addCourseButton);
         addCoursebutton.setOnClickListener(this);
-        //updateCourseButton = findViewById(R.id.updateButton);
-        //updateCourseButton.setOnClickListener(this);
         showonlineButton = findViewById(R.id.showOnlineButton);
         showonlineButton.setOnClickListener(this);
         recyclerView = findViewById(R.id.course_recycleview);
@@ -93,8 +89,6 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
             openShowDialog();
         }/* else if (i == R.id.logoutButton) {
             signOut();
-        } else if (i == R.id.updateButton) {
-            openUpdateDialog();
         }*/
     }
     private void getLecturerData(String lecturerID) {
@@ -165,6 +159,7 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         editTextsTime = view.findViewById(R.id.edit_starttime);
         editTexteTime = view.findViewById(R.id.edit_endtime);
         editTextSection = view.findViewById(R.id.edit_section);
+        editTextRoom = view.findViewById(R.id.edit_room);
         builder.setView(view)
                 .setTitle("ADD COURSE")
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -184,7 +179,7 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                         HashMap<String, String> section = new HashMap<>();
                         section.put(sec, lecturerID);
                         HashMap<String, String> room = new HashMap<>();
-                        section.put(sec, "CSB309");
+                        room.put(sec, editTextRoom.getText().toString());
 
                         CourseLec course = new CourseLec(courseno ,title, day, time,true, section, room);
                         db.collection("Course").document(courseno).set(course);     //Add replace ** use update if old doc
@@ -193,49 +188,6 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                 });
         builder.show();
     }
-
-    private void openUpdateDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.dialog_add_course, null);
-        editTextCourseno = view.findViewById(R.id.edit_couseno);
-        editTextTitle = view.findViewById(R.id.edit_title);
-        editTextDay = view.findViewById(R.id.edit_day);
-        editTextsTime = view.findViewById(R.id.edit_starttime);
-        editTexteTime = view.findViewById(R.id.edit_endtime);
-        editTextSection = view.findViewById(R.id.edit_section);
-
-        builder.setView(view)
-                .setTitle("ADD COURSE")
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String courseno = editTextCourseno.getText().toString();
-                        String title = editTextTitle.getText().toString();
-                        String day = editTextDay.getText().toString();
-                        String time = editTextsTime.getText().toString() + " - " + editTexteTime.getText().toString();
-                        String sec = editTextSection.getText().toString();
-                        HashMap<String, String> section = new HashMap<>();
-                        section.put(sec, lecturerID);
-                        HashMap<String, String> room = new HashMap<>();
-                        section.put(sec, "CSB309");
-
-                        CourseLec course = new CourseLec(courseno ,title, day, time,true, section, room);
-                        db.collection("Course").document(courseno).set(course);
-
-
-                    }
-                });
-        builder.show();
-    }
-
 
     private void openShowDialog() {
 
@@ -267,18 +219,18 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                 .build();
         studentAdapter = new ShowStudentAdapter(lecturerID, options);
         recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(studentAdapter);
 
     }
 
     private void setupCourseRecycleView(String lecturerID){
-        Query query = db.collection("Course").whereEqualTo("sectionLec.001", lecturerID)/*.orderBy("courseID", Query.Direction.ASCENDING)*/;
+        Query query = db.collection("Course").whereGreaterThanOrEqualTo("sectionLec." + lecturerID, ""/*lecturerID*/)/*.orderBy("courseID", Query.Direction.ASCENDING)*/;
         FirestoreRecyclerOptions<CourseLec> options = new FirestoreRecyclerOptions.Builder<CourseLec>()
                 .setQuery(query, CourseLec.class)
                 .build();
-        courseAdapter = new ShowCourseAdapter(lecturerID, options);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        courseAdapter = new ShowCourseAdapter(mContext ,lecturerID, options);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(courseAdapter);
     }
 

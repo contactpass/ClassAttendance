@@ -44,7 +44,7 @@ public class LoginLecturerActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-/*
+
         if (currentUser != null){
             Log.d(TAG, "user is login");
             String userID = currentUser.getUid();
@@ -53,7 +53,7 @@ public class LoginLecturerActivity extends AppCompatActivity {
             startActivity(intent);
         } else {
             Log.d(TAG, "user is not login");
-        }*/
+        }
         //updateUI(currentUser);
     }
 

@@ -3,21 +3,23 @@ package com.example.petong.classattendance;
 import com.google.firebase.Timestamp;
 
 public class Attendance {
-    private Timestamp date;
+    private String date;
     private String studentID;
     private String courseID;
 
-    public Attendance(Timestamp date, String studentID, String courseID) {
+    public Attendance() {}
+
+    public Attendance(String date, String studentID, String courseID) {
         this.date = date;
         this.studentID = studentID;
         this.courseID = courseID;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

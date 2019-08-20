@@ -2,7 +2,7 @@ package com.example.petong.classattendance;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
@@ -10,8 +10,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +23,11 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,20 +40,13 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
-import org.threeten.bp.Instant;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.DateTimeFormatterBuilder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -59,15 +56,15 @@ public class MainActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private static final int REQUEST_FINE_LOCATION = 124;
     //private int[] rssiOneMeter = new int[] {-46, -45, -35}; //home
-    //private int[] rssiOneMeter = new int[] {-46, -45, -40}; //jumbo1
-    private int[] rssiOneMeter = new int[] {-44, -43, -40}; //jumbo all
+    private int[] rssiOneMeter = new int[] {-46, -45, -40}; //jumbo1
+    //private int[] rssiOneMeter = new int[] {-44, -43, -40}; //jumbo all
     //private final double[][] positionsAP = new double[][] { { 0.0, 0.0 }, { 0.86, 5.7 }, { 9.8, 5.1 } };  //home
-    //private final double[][] positionsAP = new double[][] { { 5.5, 0.0 }, { 0.0, 0.0}, { 2, 4.5 } };        //309
-    private final double[][] positionsAP = new double[][] { { 8.0, 0.0 }, { 8.0, 15.0}, { 0, 14. } };        //floor3
+    private final double[][] positionsAP = new double[][] { { 5.5, 0.0 }, { 0.0, 0.0}, { 2, 4.5 } };        //309
+    //private final double[][] positionsAP = new double[][] { { 8.0, 0.0 }, { 8.0, 15.0}, { 0, 14. } };        //floor3
     private double[] distance = new double[3];
     //private  final int[][] room1 =  {{-1, 5}, {-2, 4}}; //{{x1, x2}, {y1, y2}}    home
-    //private  final int[][] room1 =  {{-4, 8}, {-4, 12}};        //309 test
-    private  final int[][] room1 =  {{-4, 4}, {8, 20}};        //309jumbo
+    private  final int[][] room1 =  {{-4, 8}, {-4, 12}};        //309 test
+    //private  final int[][] room1 =  {{-4, 4}, {8, 20}};        //309jumbo
     private ScanBoradcastReceiver wifiReceiver;
     private ScanWifiTask wifiTask;
     private FirebaseFirestore db;
@@ -87,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
     private String inArea = "in the area";
     private EditText courseno;
     private Button showbutt;
+
+    private HistoryAdapter historyAdapter;
+    private RecyclerView recyclerView;
 
 
 
@@ -119,16 +119,12 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter((WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         registerReceiver(wifiReceiver, filter);
 
-        /*showbutt.setOnClickListener(new View.OnClickListener() {
+        showbutt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String courseNo = courseno.getText().toString();
-                Intent intent = new Intent(getApplicationContext(), ShowAttActivity.class);
-                intent.putExtra("CourseID", courseNo);
-                intent.putExtra("StudentID", userData.getData().getStudentCode());
-                startActivity(intent);
+                openShowDialog(userData.getData());
             }
-        });*/
+        });
 
         searchCourse(userData, new SearchCourseInterface() {
             @Override
@@ -176,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                                 db.collection("Student").document(userData.getData().getStudentCode()).update(status);
                                 Toast.makeText(getApplicationContext(),"Position " + String.format("%.2f", position[0]) + ", " + String.format("%.2f", position[1]), Toast.LENGTH_LONG).show();
                             }
-                            if (false /*count == 5*/){
+                            if (count == 5){
                                 attendanceClass(userData.getData());
                                 wifiTask.cancel(true);
                                 Toast.makeText(getApplicationContext(), "Class Attendance Success", Toast.LENGTH_LONG).show();
@@ -193,16 +189,17 @@ public class MainActivity extends AppCompatActivity {
     private void intInstance(){
         stuID = findViewById(R.id.stuIDView);
         stuName = findViewById(R.id.fullnameView);
-        titleTV = findViewById(R.id.titleText);
+        titleTV = findViewById(R.id.textTitle);
         sectionTV = findViewById(R.id.sectionView);
         dayTV = findViewById(R.id.dayView);
         timeTV = findViewById(R.id.timeView);
         statusTV = findViewById(R.id.statusView);
-        courseno = findViewById(R.id.coursenoText);
+        courseno = findViewById(R.id.textCourseno);
         showbutt = findViewById(R.id.show_button);
 
         db = FirebaseFirestore.getInstance();
         wifiReceiver = new ScanBoradcastReceiver();
+
     }
 
     private void createTable(HashMap<String, Object> courseList){
@@ -218,7 +215,58 @@ public class MainActivity extends AppCompatActivity {
         timeTV.setText(course.getTime());
         String start = "Class Started";
         statusTV.setText(start);
+    }
 
+    private void openShowDialog( UserData userData) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_student_online, null);
+
+        setupStudentRecyclerView(view, userData);
+        historyAdapter.startListening();
+
+        builder.setView(view)
+                .setTitle("SHOW STUDENT ONLINE")
+                .setNegativeButton("CLOSE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        historyAdapter.stopListening();
+                        dialog.dismiss();
+
+                    }
+                });
+        builder.show();
+
+        db.collection("ClassAttendance").whereEqualTo("studentID", userData.getStudentCode()).whereEqualTo("courseID", courseno.getText().toString())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int k = 0;
+                            for (DocumentSnapshot document : task.getResult()) {
+                                k++;
+                            } Toast.makeText(getApplicationContext(), "Your Class Attendance is " + k, Toast.LENGTH_LONG).show();
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+
+                    }
+                });
+
+    }
+
+    private void setupStudentRecyclerView(View view, UserData userData) {
+        Query query = db.collection("ClassAttendance").whereEqualTo("studentID", userData.getStudentCode()).whereEqualTo("courseID", courseno.getText().toString())/*.orderBy("date", Query.Direction.ASCENDING)*/;
+        FirestoreRecyclerOptions<Attendance> options = new FirestoreRecyclerOptions.Builder<Attendance>()
+                .setQuery(query, Attendance.class)
+                .build();
+        historyAdapter = new HistoryAdapter(options);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(historyAdapter);
 
     }
 
@@ -262,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         */
-        attendance = new Attendance(new Timestamp(new Date()), userData.getStudentCode(), courseNow);
+        attendance = new Attendance("18-07-2019", userData.getStudentCode(), courseNow);
 
         db.collection("ClassAttendance").add(attendance)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
