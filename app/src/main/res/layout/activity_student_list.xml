@@ -84,6 +84,29 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSection" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonDate" />
+
+    <Button
+        android:id="@+id/buttonDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="SHOW"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewDate"
+        app:layout_constraintTop_toTopOf="@+id/textViewDate" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="select date here"
+        android:background="@drawable/login_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewSection" />
 
 </android.support.constraint.ConstraintLayout>

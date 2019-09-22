@@ -6,13 +6,23 @@ public class Attendance {
     private String date;
     private String studentID;
     private String courseID;
+    private String fullname;
 
     public Attendance() {}
 
-    public Attendance(String date, String studentID, String courseID) {
+    public Attendance(String date, String studentID, String courseID, String fullname) {
         this.date = date;
         this.studentID = studentID;
         this.courseID = courseID;
+        this.fullname = fullname;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getDate() {

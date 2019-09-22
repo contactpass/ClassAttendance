@@ -63,8 +63,8 @@ public class StudentListAdapter extends FirestoreRecyclerAdapter<Student, Studen
             super(itemView);
 
             db = FirebaseFirestore.getInstance();
-            textViewStuID = itemView.findViewById(R.id.textViewStuID);
-            textViewStuName = itemView.findViewById(R.id.textViewStuName);
+            textViewStuID = itemView.findViewById(R.id.textView_stuID);
+            textViewStuName = itemView.findViewById(R.id.textView_stuName);
             buttonDetail = itemView.findViewById(R.id.buttonDetail);
             buttonDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,7 +130,7 @@ public class StudentListAdapter extends FirestoreRecyclerAdapter<Student, Studen
                     .setQuery(query, Attendance.class)
                     .build();
             historyAdapter = new HistoryAdapter(options);
-            recyclerView = view.findViewById(R.id.recycler_view);
+            recyclerView = view.findViewById(R.id.student_recyclrview );
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             recyclerView.setAdapter(historyAdapter);
 

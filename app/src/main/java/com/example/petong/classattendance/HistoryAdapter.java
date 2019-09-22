@@ -20,8 +20,6 @@ public class HistoryAdapter extends FirestoreRecyclerAdapter<Attendance, History
 
     @Override
     protected void onBindViewHolder(@NonNull HistoryHolder holder, int position, @NonNull Attendance model) {
-        //Log.d("Datee", model.getDate());
-        //holder.date.setText(model.getDate());
         holder.studentcode.setText(model.getStudentID());
         holder.course.setText(model.getCourseID());
         holder.date.setText(model.getDate());

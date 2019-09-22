@@ -1,8 +1,12 @@
 package com.example.petong.classattendance;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,10 +14,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,27 +35,32 @@ import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 
-public class LecturerActivity extends AppCompatActivity implements View.OnClickListener{
+public class LecturerActivity extends AppCompatActivity implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
     private TextView lecName;
     private Button addCoursebutton;
     private Button showonlineButton;
     private EditText editTextCourseno;
     private EditText editTextTitle;
-    private EditText editTextDay;
-    private EditText editTextsTime;
-    private EditText editTexteTime;
+    private TextView textViewsTime;
+    private TextView textVieweTime;
     private EditText editTextSection;
     private EditText editTextRoom;
+    private Spinner spinnerDays;
     private String lecturerID;
     private Lecturer lecturer;
     //private CourseLec course;
     private ShowStudentAdapter studentAdapter;
     private ShowCourseAdapter courseAdapter;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewCourse;
+    private RecyclerView recyclerViewStudent;
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+    private String days;
+    private Boolean whatTime = true;
+    private String stime;
+    private String etime;
     Context mContext;
 
     @Override
@@ -71,7 +86,7 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         addCoursebutton.setOnClickListener(this);
         showonlineButton = findViewById(R.id.showOnlineButton);
         showonlineButton.setOnClickListener(this);
-        recyclerView = findViewById(R.id.course_recycleview);
+        recyclerViewCourse = findViewById(R.id.course_recycleview);
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -87,9 +102,17 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         }
         else if (i == R.id.showOnlineButton) {
             openShowDialog();
-        }/* else if (i == R.id.logoutButton) {
-            signOut();
-        }*/
+        } else if (i == R.id.textview_starttime) {
+            whatTime = true;
+            TimePickerDialog timePicker = new TimePickerDialog(this,android.R.style.Theme_Holo_Light_Dialog,this,0,0,true);
+            timePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            timePicker.show();
+        } else if (i == R.id.textview_endtime) {
+            whatTime = false;
+            TimePickerDialog timePicker = new TimePickerDialog(this,android.R.style.Theme_Holo_Light_Dialog,this,0,0,true);
+            timePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            timePicker.show();
+        }
     }
     private void getLecturerData(String lecturerID) {
         db.collection("Lecturer").document(lecturerID).get()
@@ -139,14 +162,30 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         startActivity(intent);
     }
     private void signOut() {
-        auth.signOut();
-        FirebaseUser user = auth.getCurrentUser();
-        if (user != null){
-            Log.d("emailpassword", "user is not logout");
-        } else {
-            Log.d("emailpassword", "user is logout");
-        }
-        gotoLogin();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("CONFIRM SIGN OUT")
+                .setMessage("Are you sure you want to sign out")
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        auth.signOut();
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null){
+                            Log.d("emailpassword", "user is not logout");
+                        } else {
+                            Log.d("emailpassword", "user is logout");
+                        }
+                        gotoLogin();
+                    }
+                });
+        builder.show();
+
     }
     private void openAddDialog() {
 
@@ -155,9 +194,27 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
         View view = inflater.inflate(R.layout.dialog_add_course, null);
         editTextCourseno = view.findViewById(R.id.edit_couseno);
         editTextTitle = view.findViewById(R.id.edit_title);
-        editTextDay = view.findViewById(R.id.edit_day);
-        editTextsTime = view.findViewById(R.id.edit_starttime);
-        editTexteTime = view.findViewById(R.id.edit_endtime);
+        spinnerDays = view.findViewById(R.id.spinnerDay);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.days, R.layout.support_simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+
+        spinnerDays.setAdapter(adapter);
+        spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                 days = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                days = null;
+            }
+        });
+        textViewsTime = view.findViewById(R.id.textview_starttime);
+        textVieweTime = view.findViewById(R.id.textview_endtime);
+        textViewsTime.setOnClickListener(this);
+        textVieweTime.setOnClickListener(this);
+
         editTextSection = view.findViewById(R.id.edit_section);
         editTextRoom = view.findViewById(R.id.edit_room);
         builder.setView(view)
@@ -173,15 +230,14 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                     public void onClick(DialogInterface dialog, int which) {
                         String courseno = editTextCourseno.getText().toString();
                         String title = editTextTitle.getText().toString();
-                        String day = editTextDay.getText().toString();
-                        String time = editTextsTime.getText().toString() + " - " + editTexteTime.getText().toString();
+                        String time = stime + " - " + etime;
                         String sec = editTextSection.getText().toString();
                         HashMap<String, String> section = new HashMap<>();
-                        section.put(sec, lecturerID);
+                        section.put(lecturerID, sec);
                         HashMap<String, String> room = new HashMap<>();
                         room.put(sec, editTextRoom.getText().toString());
 
-                        CourseLec course = new CourseLec(courseno ,title, day, time,true, section, room);
+                        CourseLec course = new CourseLec(courseno ,title, days, time,true, section, room);
                         db.collection("Course").document(courseno).set(course);     //Add replace ** use update if old doc
 
                     }
@@ -218,9 +274,9 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                 .setQuery(query, Student.class)
                 .build();
         studentAdapter = new ShowStudentAdapter(lecturerID, options);
-        recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(studentAdapter);
+        recyclerViewStudent = view.findViewById(R.id.recyclerview_student);
+        recyclerViewStudent.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewStudent.setAdapter(studentAdapter);
 
     }
 
@@ -230,8 +286,8 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
                 .setQuery(query, CourseLec.class)
                 .build();
         courseAdapter = new ShowCourseAdapter(mContext ,lecturerID, options);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(courseAdapter);
+        recyclerViewCourse.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCourse.setAdapter(courseAdapter);
     }
 
     @Override
@@ -244,5 +300,41 @@ public class LecturerActivity extends AppCompatActivity implements View.OnClickL
     protected void onStop() {
         super.onStop();
         courseAdapter.stopListening();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.lec_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.button_logout) {
+            signOut();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String hour = String.valueOf(hourOfDay);
+        String min = String.valueOf(minute);
+
+        if (hourOfDay < 10) {
+            hour = "0" + hourOfDay;
+        } if (minute < 10) {
+            min = "0" + minute;
+        }
+        String time = hour + " : " + min;
+        if (whatTime) {
+            stime = hour + min;
+            textViewsTime.setText(time);
+        } else {
+            etime = hour + min;
+            textVieweTime.setText(time);
+        }
     }
 }

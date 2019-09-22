@@ -1,8 +1,11 @@
 package com.example.petong.classattendance;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -68,12 +75,15 @@ public class ShowCourseAdapter extends FirestoreRecyclerAdapter<CourseLec, ShowC
         Button buttonDelete;
         EditText editTextCourseno;
         EditText editTextTitle;
-        EditText editTextDay;
-        EditText editTextSTime;
-        EditText editTextETime;
+        Spinner spinnerDays;
+        TextView textViewsTime;
+        TextView textVieweTime;
         EditText editTextSection;
         EditText editTextRoom;
         CourseLec mCourse;
+        String days;
+        String stime;
+        String etime;
 
         public ShowCourseHolder(@NonNull View itemView) {
             super(itemView);
@@ -159,18 +169,84 @@ public class ShowCourseAdapter extends FirestoreRecyclerAdapter<CourseLec, ShowC
             View view = mInflater.inflate(R.layout.dialog_add_course, null);
             editTextCourseno = view.findViewById(R.id.edit_couseno);
             editTextTitle = view.findViewById(R.id.edit_title);
-            editTextDay = view.findViewById(R.id.edit_day);
-            editTextSTime = view.findViewById(R.id.edit_starttime);
-            editTextETime = view.findViewById(R.id.edit_endtime);
+            spinnerDays = view.findViewById(R.id.spinnerDay);
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.days, R.layout.support_simple_spinner_dropdown_item);
+            adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinnerDays.setAdapter(adapter);
+            spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    days = parent.getItemAtPosition(position).toString();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            textViewsTime = view.findViewById(R.id.textview_starttime);
+            textVieweTime = view.findViewById(R.id.textview_endtime);
             editTextSection = view.findViewById(R.id.edit_section);
             editTextRoom = view.findViewById(R.id.edit_room);
 
             editTextCourseno.setText(course.getCourseID());
             editTextTitle.setText(course.getTitle());
-            editTextDay.setText(course.getDay());
+            spinnerDays.setSelection(adapter.getPosition(course.getDay()));
             String[] time = course.getTime().split(" - ");
-            editTextSTime.setText(time[0]);
-            editTextETime.setText(time[1]);
+            final String[] starttime = time[0].split("(?<=\\G.{2})");
+            final String[] endtime = time[1].split("(?<=\\G.{2})");
+            stime = starttime[0] + " : " + starttime[1];
+            etime = endtime[0] + " : " + endtime[1];
+            textViewsTime.setText(stime);
+            textViewsTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TimePickerDialog timePicker = new TimePickerDialog(mContext, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String hour = String.valueOf(hourOfDay);
+                            String min = String.valueOf(minute);
+
+                            if (hourOfDay < 10) {
+                                hour = "0" + hourOfDay;
+                            } if (minute < 10) {
+                                min = "0" + minute;
+                            }
+                            String time = hour + " : " + min;
+                            stime = hour + min;
+                            textViewsTime.setText(time);
+                            //Log.d("setTime", stime);
+                        }
+                    }, Integer.valueOf(starttime[0]), Integer.valueOf(starttime[1]), true);
+                    timePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    timePicker.show();
+                }
+            });
+            textVieweTime.setText(etime);
+            textVieweTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TimePickerDialog timePicker = new TimePickerDialog(mContext, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            String hour = String.valueOf(hourOfDay);
+                            String min = String.valueOf(minute);
+
+                            if (hourOfDay < 10) {
+                                hour = "0" + hourOfDay;
+                            } if (minute < 10) {
+                                min = "0" + minute;
+                            }
+                            String time = hour + " : " + min;
+                            etime = hour + min;
+                            textViewsTime.setText(time);
+                            //Log.d("setTime", stime);
+                        }
+                    }, Integer.valueOf(endtime[0]), Integer.valueOf(endtime[1]), true);
+                    timePicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    timePicker.show();
+                }
+            });
 
             HashMap<String, String> sec = course.getSectionLec();
             String section = sec.get(lecID);
@@ -191,8 +267,8 @@ public class ShowCourseAdapter extends FirestoreRecyclerAdapter<CourseLec, ShowC
                         public void onClick(DialogInterface dialog, int which) {
                             String courseno = editTextCourseno.getText().toString();
                             String title = editTextTitle.getText().toString();
-                            String day = editTextDay.getText().toString();
-                            String time = editTextSTime.getText().toString() + " - " + editTextETime.getText().toString();
+                            String day = days;
+                            String time = stime + " - " + etime;
                             String sec = editTextSection.getText().toString();
                             HashMap<String, String> section = new HashMap<>();
                             section.put(lecID, sec);

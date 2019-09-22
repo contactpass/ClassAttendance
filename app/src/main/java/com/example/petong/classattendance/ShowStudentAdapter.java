@@ -22,13 +22,6 @@ public class ShowStudentAdapter extends FirestoreRecyclerAdapter<Student, ShowSt
         holder.studentcode.setText(model.getStudentID());
         String fullname = model.getFirstname() + "  " + model.getLastname();
         holder.studentname.setText(fullname);
-        String stat;
-        if (model.getStatus()){
-            stat = "Online";
-        } else {
-            stat = "Offline";
-        }
-        holder.status.setText(stat);
     }
 
     @NonNull
@@ -42,13 +35,11 @@ public class ShowStudentAdapter extends FirestoreRecyclerAdapter<Student, ShowSt
 
         TextView studentcode;
         TextView studentname;
-        TextView status;
 
         public ShowStudentHolder(@NonNull View itemView) {
             super(itemView);
             studentcode = itemView.findViewById(R.id.text_studentID);
             studentname = itemView.findViewById(R.id.text_studentname);
-            status = itemView.findViewById(R.id.text_date);
         }
     }
 }

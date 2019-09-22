@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         searchCourse(userData, new SearchCourseInterface() {
             @Override
             public void onSearchCourseFinished(HashMap<String, Object> courseList) {
-                addStudentData(userData.getData(), courseList);
+                //addStudentData(userData.getData(), courseList);   open it
                 LocalDate date = LocalDate.now();
                 //String day = setDay(date.getDayOfWeek().toString());  //Day
                 //Log.d("TimeNow", day);
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                 .setQuery(query, Attendance.class)
                 .build();
         historyAdapter = new HistoryAdapter(options);
-        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = view.findViewById(R.id.student_recyclrview );
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(historyAdapter);
 
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         */
-        attendance = new Attendance("18-07-2019", userData.getStudentCode(), courseNow);
+        attendance = new Attendance("18-07-2019", userData.getStudentCode(), courseNow, "ABC EFG");
 
         db.collection("ClassAttendance").add(attendance)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

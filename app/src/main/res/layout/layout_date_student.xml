@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,21 +8,21 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp">
 
         <TextView
             android:id="@+id/textView_stuID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/preinfotext"
             android:gravity="center"
             android:paddingStart="10sp"
             android:paddingEnd="10sp"
             android:text="@string/student_id"
             android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:background="@drawable/stident_id"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,33 +30,17 @@
             android:id="@+id/textView_stuName"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="60dp"
             android:background="@drawable/login_button"
             android:gravity="center_vertical"
             android:paddingStart="10sp"
             android:paddingEnd="10sp"
             android:text="Student Name"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonDetail"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_stuID"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/textView_stuID"
-            app:layout_constraintTop_toTopOf="@+id/buttonDetail" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView_stuID"
+            app:layout_constraintTop_toTopOf="@+id/textView_stuID" />
 
-        <Button
-            android:id="@+id/buttonDetail"
-            android:layout_width="69dp"
-            android:layout_height="33dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-
-            android:background="@drawable/detail_button"
-            android:text="Detail"
-            android:textColor="@color/common_google_signin_btn_text_dark_default"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView_stuID"
-            app:layout_constraintVertical_bias="0.0" />
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

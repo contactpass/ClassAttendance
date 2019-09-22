@@ -11,10 +11,11 @@
         android:id="@+id/edit_section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="5"
         android:hint="Section"
-        app:layout_constraintStart_toStartOf="@+id/edit_endtime"
-        app:layout_constraintTop_toBottomOf="@+id/edit_endtime" />
+        app:layout_constraintStart_toStartOf="@+id/textview_endtime"
+        app:layout_constraintTop_toBottomOf="@+id/textview_endtime" />
 
     <EditText
         android:id="@+id/edit_couseno"
@@ -37,32 +38,27 @@
         app:layout_constraintStart_toStartOf="@+id/edit_couseno"
         app:layout_constraintTop_toBottomOf="@+id/edit_couseno" />
 
-    <EditText
-        android:id="@+id/edit_day"
+    <TextView
+        android:id="@+id/textview_starttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="4"
-        android:hint="Day"
-        app:layout_constraintStart_toStartOf="@+id/edit_title"
-        app:layout_constraintTop_toBottomOf="@+id/edit_title" />
-
-    <EditText
-        android:id="@+id/edit_starttime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="5"
         android:hint="Start Time"
-        app:layout_constraintStart_toStartOf="@+id/edit_day"
-        app:layout_constraintTop_toBottomOf="@+id/edit_day" />
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewDay"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDay" />
 
-    <EditText
-        android:id="@+id/edit_endtime"
+    <TextView
+        android:id="@+id/textview_endtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:ems="5"
         android:hint="End Time"
-        app:layout_constraintStart_toStartOf="@+id/edit_starttime"
-        app:layout_constraintTop_toBottomOf="@+id/edit_starttime" />
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/textview_starttime"
+        app:layout_constraintTop_toBottomOf="@+id/textview_starttime" />
 
     <EditText
         android:id="@+id/edit_room"
@@ -72,6 +68,26 @@
         android:hint="Room"
         app:layout_constraintStart_toStartOf="@+id/edit_section"
         app:layout_constraintTop_toBottomOf="@+id/edit_section" />
+
+    <Spinner
+        android:id="@+id/spinnerDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:dropDownWidth="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewDay"
+        app:layout_constraintStart_toEndOf="@+id/textViewDay"
+        app:layout_constraintTop_toTopOf="@+id/textViewDay" />
+
+    <TextView
+        android:id="@+id/textViewDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Day"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/edit_title"
+        app:layout_constraintTop_toBottomOf="@+id/edit_title" />
 
 
 </android.support.constraint.ConstraintLayout>

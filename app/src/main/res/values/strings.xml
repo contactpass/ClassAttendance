@@ -1,4 +1,10 @@
 <resources>
+
+    <string-array name="days">
+        <item>MTh</item>
+        <item>TuF</item>
+        <item>Wed</item>
+    </string-array>
     <string name="app_name">ClassAttendance</string>
     <string name="register">Register</string>
     <string name="e_mail">E-mail</string>
