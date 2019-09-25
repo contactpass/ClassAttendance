@@ -1,7 +1,16 @@
 package com.example.petong.classattendance;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -15,20 +24,24 @@ import java.util.Map;
 public class SearchCourseTask extends AsyncTask<Void, Void, HashMap<String, Object>> {
 
     final MainActivity.SearchCourseInterface callback;
-    User userData;
+    String studentID;
+    FirebaseFirestore db;
 
-    public SearchCourseTask(User userData ,MainActivity.SearchCourseInterface callback) {
+    public SearchCourseTask(String studentID, MainActivity.SearchCourseInterface callback) {
         this.callback = callback;
-        this.userData = userData;
+        this.studentID = studentID;
     }
 
     @Override
     protected HashMap<String, Object> doInBackground(Void...voids) {
-        String USER_AGENT = "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36";
+
+
+
+        /*String USER_AGENT = "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36";
         String referrer = "http://www.google.com";
         Map<String, String> cookies = new HashMap<>();
 
-        /*
+
         try {
             Connection.Response response = Jsoup.connect("https://www3.reg.cmu.ac.th/regist260/public/result.php")
                     .userAgent(USER_AGENT)
@@ -77,35 +90,8 @@ public class SearchCourseTask extends AsyncTask<Void, Void, HashMap<String, Obje
             e.printStackTrace();
         }*/
 
-        try {
-            Map<String, String> data = new HashMap<String, String>();
 
-            Connection.Response loginPageRes = Jsoup.connect("https://oauth.cmu.ac.th/v1/Login.aspx?continue=Registration%20System")
-                    .userAgent(USER_AGENT)
-                    .timeout(30 * 1000)
-                    .method(Connection.Method.GET)
-                    .followRedirects(true)
-                    .execute();
 
-            data.put("user", "chawit_w");
-            data.put("password", "contact00");
-
-            Connection.Response response = Jsoup.connect("https://www1.reg.cmu.ac.th/registrationoffice/student/main.php?mainfile=studentprofile")
-                    .method(Connection.Method.POST)
-                    .userAgent(USER_AGENT)
-                    //.referrer("https://oauth.cmu.ac.th/v1/Login.aspx?continue=Registration%20System")
-                    .data(data)
-                    .cookies(loginPageRes.cookies())
-                    .timeout(30 * 1000)
-                    .followRedirects(true)
-                    .execute();
-            Document doc = response.parse();
-            Log.d("Scraping", doc.title());
-            Log.d("Scraping", "Hello");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         return null;
     }

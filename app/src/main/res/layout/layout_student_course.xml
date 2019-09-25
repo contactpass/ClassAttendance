@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp">
+
+        <TextView
+            android:id="@+id/timeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingStart="5sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="5sp"
+            android:paddingBottom="3sp"
+            android:text="@string/time"
+            app:layout_constraintBottom_toBottomOf="@+id/dayView"
+            app:layout_constraintStart_toEndOf="@+id/dayView"
+            app:layout_constraintTop_toTopOf="@+id/dayView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/sectionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingStart="5sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="5sp"
+            android:paddingBottom="3sp"
+            android:text="@string/section"
+            app:layout_constraintStart_toStartOf="@+id/textTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textTitle" />
+
+        <TextView
+            android:id="@+id/dayView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingStart="5sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="5sp"
+            android:paddingBottom="3sp"
+            android:text="@string/day"
+            app:layout_constraintBottom_toBottomOf="@+id/sectionView"
+            app:layout_constraintStart_toEndOf="@+id/sectionView"
+            app:layout_constraintTop_toTopOf="@+id/sectionView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/timeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/time"
+            app:layout_constraintBottom_toBottomOf="@+id/dayText"
+            app:layout_constraintEnd_toEndOf="@+id/timeView"
+            app:layout_constraintStart_toStartOf="@+id/timeView"
+            app:layout_constraintTop_toTopOf="@+id/dayText" />
+
+        <TextView
+            android:id="@+id/dayText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/day"
+            app:layout_constraintBottom_toBottomOf="@+id/sectionText"
+            app:layout_constraintEnd_toEndOf="@+id/dayView"
+            app:layout_constraintStart_toStartOf="@+id/dayView"
+            app:layout_constraintTop_toTopOf="@+id/sectionText" />
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingStart="10sp"
+            android:paddingTop="10sp"
+            android:paddingEnd="10sp"
+            android:paddingBottom="10sp"
+            android:textColor="@color/common_google_signin_btn_text_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/sectionView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/section"
+            app:layout_constraintEnd_toEndOf="@+id/sectionText"
+            app:layout_constraintStart_toStartOf="@+id/sectionText"
+            app:layout_constraintTop_toBottomOf="@+id/sectionText" />
+
+        <TextView
+            android:id="@+id/statusView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_table"
+            android:gravity="center"
+            android:paddingStart="5sp"
+            android:paddingTop="3sp"
+            android:paddingEnd="5sp"
+            android:paddingBottom="3sp"
+            android:text="@string/status"
+            android:textColor="#3B892E"
+            app:layout_constraintBottom_toBottomOf="@+id/timeView"
+            app:layout_constraintEnd_toEndOf="@+id/textTitle"
+            app:layout_constraintStart_toEndOf="@+id/timeView"
+            app:layout_constraintTop_toTopOf="@+id/timeView"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_table"
+            android:gravity="center"
+            android:paddingTop="3sp"
+            android:paddingBottom="3sp"
+            android:text="@string/status"
+            app:layout_constraintBottom_toBottomOf="@+id/timeText"
+            app:layout_constraintEnd_toEndOf="@+id/statusView"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/statusView" />
+
+        <Button
+            android:id="@+id/button_attendance_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/attendance_detail"
+            android:background="@drawable/detail_button"
+            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sectionView" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

@@ -33,6 +33,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
@@ -40,11 +41,8 @@ import com.lemmingapex.trilateration.TrilaterationFunction;
 
 import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
 import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalTime;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.DateTimeFormatterBuilder;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private int count = 0;
     private String courseNow;
+    private String studentID;
+    private String fullname;
+    private Map<String, Object> courseList;
     private Attendance attendance;
 
     private TextView stuID;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusTV;
     private String inArea = "in the area";
     private EditText courseno;
-    private Button showbutt;
+    private Button addButton;
 
     private HistoryAdapter historyAdapter;
     private RecyclerView recyclerView;
@@ -96,50 +97,38 @@ public class MainActivity extends AppCompatActivity {
         AndroidThreeTen.init(this);
         setContentView(R.layout.activity_main);
 
-        intInstance();
-        Bundle bunndle = getIntent().getExtras();
-        final User userData = bunndle.getParcelable("User");
-
-        stuID.setText(userData.getData().getStudentCode());
-        stuName.setText(userData.getData().getFullName());
-        /*
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), userData);
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);*/
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
         }
+
+        Bundle bunndle = getIntent().getExtras();
+        final User userData = bunndle.getParcelable("User");
+
+
+        intInstance();
+
+        stuID.setText(studentID);
+        stuName.setText(fullname);
+
+
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiReceiver.setWifiManager(wifiManager);
 
         IntentFilter filter = new IntentFilter((WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         registerReceiver(wifiReceiver, filter);
 
-        showbutt.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openShowDialog(userData.getData());
             }
         });
-
-        searchCourse(userData, new SearchCourseInterface() {
-            @Override
-            public void onSearchCourseFinished(HashMap<String, Object> courseList) {
-                //addStudentData(userData.getData(), courseList);   open it
-                LocalDate date = LocalDate.now();
-                //String day = setDay(date.getDayOfWeek().toString());  //Day
-                //Log.d("TimeNow", day);
-                String day = "Th";
-
-                //LocalTime time = LocalTime.now();     //Time
-                LocalTime time = LocalTime.of(9, 20);
-                //Log.d("TimeNow", time.toString());
-                boolean success = checkDateTime(courseList, time, day);
-                if (success == true) {
+        getCourse();
+        if (courseList != null){
+            checkDateTime(courseList, new CheckDateTimeInterface() {
+                @Override
+                public void onDateTimeMatch(CourseLec course) {
+                    courseNow = course.getCourseID();
                     scanWifi(new ScanWifiInterface() {
                         @Override
                         public void onReceiveRssi(int[] rssi) {
@@ -179,11 +168,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     });
-                } else {
-                    //Do some thing
                 }
-            }
-        });
+            });
+        }
     }
 
     private void intInstance(){
@@ -194,27 +181,31 @@ public class MainActivity extends AppCompatActivity {
         dayTV = findViewById(R.id.dayView);
         timeTV = findViewById(R.id.timeView);
         statusTV = findViewById(R.id.statusView);
-        courseno = findViewById(R.id.textCourseno);
-        showbutt = findViewById(R.id.show_button);
+        addButton = findViewById(R.id.add_button);
 
         db = FirebaseFirestore.getInstance();
         wifiReceiver = new ScanBoradcastReceiver();
+        studentID = userData.getStudentCode();
+        fullname = userData.getFullName();
 
     }
 
-    private void createTable(HashMap<String, Object> courseList){
-        Course course = (Course) courseList.get(courseNow);
-        String title = courseNow + " - " + course.getTitle();
-        titleTV.setText(title);
-        if (course.getSection_lab().equals("000")) {
-            sectionTV.setText(course.getSection_lec());
-        } else {
-            sectionTV.setText(course.getSection_lab());
-        }
-        dayTV.setText(course.getDay());
-        timeTV.setText(course.getTime());
-        String start = "Class Started";
-        statusTV.setText(start);
+    private void getCourse() {
+
+        courseList = new HashMap<>();
+        Query queryCourse = db.collection("Course").whereGreaterThanOrEqualTo("studentID." + studentID, "");
+        queryCourse.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        CourseLec course = document.toObject(CourseLec.class);
+                        courseList.put(document.getId(), course);
+                        Log.d("checkCourse", course.getCourseID());
+                    }
+                } else {}
+            }
+        });
     }
 
     private void openShowDialog( UserData userData) {
@@ -224,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
         View view = inflater.inflate(R.layout.dialog_student_online, null);
 
-        setupStudentRecyclerView(view, userData);
+        setupStudentRecyclerView(view);
         historyAdapter.startListening();
 
         builder.setView(view)
@@ -239,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         builder.show();
 
-        db.collection("ClassAttendance").whereEqualTo("studentID", userData.getStudentCode()).whereEqualTo("courseID", courseno.getText().toString())
+        db.collection("ClassAttendance").whereEqualTo("studentID", studentID).whereEqualTo("courseID", courseno.getText().toString())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -258,8 +249,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setupStudentRecyclerView(View view, UserData userData) {
-        Query query = db.collection("ClassAttendance").whereEqualTo("studentID", userData.getStudentCode()).whereEqualTo("courseID", courseno.getText().toString())/*.orderBy("date", Query.Direction.ASCENDING)*/;
+    private void setupStudentRecyclerView(View view) {
+        Query query = db.collection("ClassAttendance").whereEqualTo("studentID", studentID).whereEqualTo("courseID", courseno.getText().toString())/*.orderBy("date", Query.Direction.ASCENDING)*/;
         FirestoreRecyclerOptions<Attendance> options = new FirestoreRecyclerOptions.Builder<Attendance>()
                 .setQuery(query, Attendance.class)
                 .build();
@@ -278,9 +269,18 @@ public class MainActivity extends AppCompatActivity {
         void onReceiveRssi(int[] rssi);
     }
 
-    public void searchCourse(User userData, SearchCourseInterface callback){
-        new SearchCourseTask(userData, callback).execute();
+    interface CheckDateTimeInterface {
+        void onDateTimeMatch(CourseLec course);
     }
+
+    public void checkDateTime(Map<String, Object> courseList, CheckDateTimeInterface callback){
+        new CheckDateTimeTask(courseList, callback).execute();
+    }
+
+    public void searchCourse(String studentID, SearchCourseInterface callback){
+        new SearchCourseTask(studentID, callback).execute();
+    }
+
     public void scanWifi(ScanWifiInterface callback){
         wifiTask = new  ScanWifiTask(callback);
         wifiTask.setWifiReceiver(wifiReceiver); //add this
@@ -310,7 +310,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         */
-        attendance = new Attendance("18-07-2019", userData.getStudentCode(), courseNow, "ABC EFG");
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH);
+        int year = c.get(Calendar.YEAR);
+        String date = day + "-" + month + "-" + year;
+
+        attendance = new Attendance(date, studentID, courseNow, fullname);
 
         db.collection("ClassAttendance").add(attendance)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -359,28 +365,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean checkDateTime(HashMap<String, Object> courseList,   LocalTime timeNow, String day){
-        for (String key : courseList.keySet()){
-            Course mCourse = (Course) courseList.get(key);
-            String[] courseDay = splitDay(mCourse.getDay());
-            String[] time = mCourse.getTime().split(" - ");
-            LocalTime startTime = toLocalTime(time[0]);
-            LocalTime endTime = toLocalTime(time[1]);
-            //Log.d("Dayd", startTime + ", " + endTime);
-            //Log.d("Dayd", day + " " + courseDay[0]);
-
-            if (day.equals(courseDay[0]) || day.equals(courseDay[1])){              //get time to split start end time class and check with time now
-                if (startTime.isBefore(timeNow) && endTime.isAfter(timeNow)){
-                    Log.d("Dayd", mCourse.getTitle() + " " + mCourse.getDay() + " " + mCourse.getTime());
-                    setCourseNow(key);
-                    createTable(courseList);
-                    return true;
-                }
-                //Log.d("Dayd", mCourse.getTitle() + " " + mCourse.getDay());
-            }
-        }
-        return false;
-    }
     private double calDistance(int rssi, int rssiOneMeter) {
         double distance;
         double x;
@@ -399,81 +383,6 @@ public class MainActivity extends AppCompatActivity {
         //Log.d("Location",String.format("%.2f", centroid[0]) + ", " + String.format("%.2f", centroid[1]) + "\n");
 
         return centroid;
-    }
-
-    private String setDay(String day) {
-        String newDay = null;
-        switch (day) {
-            case "MONDAY":
-                newDay = "M";
-                break;
-            case "TUESDAY":
-                newDay = "Tu";
-                break;
-            case "WEDNESDAY":
-                newDay = "Wed";
-                break;
-            case "THURSDAY":
-                newDay = "Th";
-                break;
-            case "FRIDAY":
-                newDay = "F";
-                break;
-            case "SATURDAY":
-                newDay = "Sa";
-                break;
-            case "SUNDAY":
-                newDay = "Su";
-                break;
-        }
-        return newDay;
-    }
-
-    private String[] splitDay(String day){
-        String[] newDay = new String[2];
-        if(countUpperCase(day) > 1) {
-            newDay = day.split("(?<=.)(?=\\p{Lu})");
-        } else {
-            newDay[0] = day;
-            newDay[1] = null;
-        }
-        //Log.d("Dayd", newDay[0] + " " + newDay[1]);
-        return newDay;
-    }
-
-    private int countUpperCase(String string) {
-        int upper = 0;
-        for(int i = 0; i < string.length(); i++){
-            if(Character.isUpperCase(string.charAt(i))){
-                upper++;
-            }
-        }
-        //Log.d("Dayd", String.valueOf(upper));
-        return upper;
-    }
-
-    private LocalTime toLocalTime(String time){
-        String[] newTime = new String[2];
-        newTime[0] = time.substring(0, 2);
-        newTime[1] = time.substring(2);
-
-        try {
-            DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                    .parseCaseInsensitive()
-                    .appendPattern("H:m")
-                    .toFormatter();
-            LocalTime mTime = LocalTime.parse(newTime[0] + ":" + newTime[1], formatter);
-            //Log.d("Dayd", mTime.toString());
-
-            return mTime;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void setCourseNow(String key) {
-        this.courseNow = key;
     }
 
     @Override

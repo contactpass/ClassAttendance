@@ -253,6 +253,7 @@ public class ShowCourseAdapter extends FirestoreRecyclerAdapter<CourseLec, ShowC
             editTextSection.setText(section);
             HashMap<String, String> room = course.getSectionRoom();
             editTextRoom.setText(room.get(section));
+            final HashMap<String, String> student = course.getStudenntID();
 
             builder.setView(view)
                     .setTitle("UPDATE COURSE")
@@ -275,7 +276,7 @@ public class ShowCourseAdapter extends FirestoreRecyclerAdapter<CourseLec, ShowC
                             HashMap<String, String> room = new HashMap<>();
                             room.put(sec, editTextRoom.getText().toString());
 
-                            CourseLec course = new CourseLec(courseno ,title, day, time,true, section, room);
+                            CourseLec course = new CourseLec(courseno ,title, day, time,true, section, room, student);
                             db.collection("Course").document(courseno).set(course);
 
 

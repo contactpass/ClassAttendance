@@ -11,10 +11,11 @@ public class CourseLec {
     private boolean status;
     private HashMap<String, String> sectionLec;
     private HashMap<String, String> sectionRoom;
+    private HashMap<String, String> studenntID;
 
     public CourseLec() {}
 
-    public CourseLec(String courseID, String title, String day, String time, boolean status, HashMap<String, String> sectionLec, HashMap<String, String> sectionRoom) {
+    public CourseLec(String courseID, String title, String day, String time, boolean status, HashMap<String, String> sectionLec, HashMap<String, String> sectionRoom, HashMap<String, String> studentID) {
         this.courseID = courseID;
         this.title = title;
         this.day = day;
@@ -22,10 +23,19 @@ public class CourseLec {
         this.status = status;
         this.sectionLec = sectionLec;
         this.sectionRoom = sectionRoom;
+        this.studenntID = studentID;
     }
 
     public HashMap<String, String> getSectionRoom() {
         return sectionRoom;
+    }
+
+    public HashMap<String, String> getStudenntID() {
+        return studenntID;
+    }
+
+    public void setStudenntID(HashMap<String, String> studenntID) {
+        this.studenntID = studenntID;
     }
 
     public void setSectionRoom(HashMap<String, String> sectionRoom) {

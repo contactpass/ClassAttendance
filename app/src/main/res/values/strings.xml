@@ -60,4 +60,6 @@
     <string name="show_online">Show Online</string>
     <string name="delete">DELETE</string>
     <string name="check">CHECK</string>
+    <string name="attendance_detail">ATTENDANCE DETAIL</string>
+    <string name="add_course">ADD COURSE</string>
 </resources>
