@@ -15,8 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StudentListActivity"></activity>
-        <activity android:name=".LecturerActivity"></activity>
+        <activity
+            android:name=".StudentCourseActivity"
+            android:label="@string/title_activity_student_course" />
+        <activity android:name=".StudentListActivity" />
+        <activity android:name=".LecturerActivity" />
         <activity android:name=".LoginLecturerActivity" />
         <activity
             android:name=".MainActivity"
